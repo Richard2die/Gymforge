@@ -678,8 +678,10 @@ function endWorkout(){
     }))
   });
   pushLog('Fine · '+dur+'min · '+wKcal+' kcal · '+wVol+' kg vol');
+  saveToStorage();
   document.getElementById('pane-active').style.display='none';
   document.getElementById('pane-start').style.display='block';
+  saveToStorage();
   toast('✓ Sessione salvata — '+wKcal+' kcal · '+wVol+' kg',3000);
 }
 
@@ -769,6 +771,7 @@ function confirmLogSet(){
   if(done>=e.targetSets) e.collapsed=true;
   closeM('m-logset'); renderExList();
   pushLog(e.name+' S'+(pendSet+1)+': '+w+'kg × '+r+' (RIR '+rir+')');
+  saveToStorage();
   startCD(90);
   goTab('timer',document.getElementById('nb-timer'));
 }
@@ -782,14 +785,14 @@ function confirmAddEx(){
     targetReps:+document.getElementById('ae-reps').value||10,
     notes:document.getElementById('ae-notes').value, sets:[], collapsed:false
   });
-  closeM('m-addex'); renderExList(); toast(ex.name+' aggiunto');
+  closeM('m-addex'); renderExList(); saveToStorage(); toast(ex.name+' aggiunto');
 }
 
 // ── LIBRARY ────────────────────────────────────────────────
 function saveNewEx(){
   const n=document.getElementById('ne-name').value.trim(); if(!n) return;
   lib.push({id:nextId++,name:n,muscle:document.getElementById('ne-muscle').value,type:document.getElementById('ne-type').value,notes:document.getElementById('ne-notes').value});
-  closeM('m-newex'); libFilter='all'; renderLibFilters(); renderLib(); toast('Esercizio salvato');
+  closeM('m-newex'); libFilter='all'; renderLibFilters(); renderLib(); saveToStorage(); toast('Esercizio salvato');
 }
 function renderLibFilters(){
   const tabs=[['all','Tutti'],['push','PUSH'],['pull','PULL'],['legs','LEGS'],['core','CORE']];
@@ -831,7 +834,7 @@ function pushLog(m){wLog.unshift({t:new Date().toLocaleTimeString('it-IT',{hour:
 function saveHR(){
   hr=+document.getElementById('hr-in').value||0;
   bw=parseFloat(document.getElementById('bw-in').value)||75;
-  updateHR(); closeM('m-hr'); toast('FC: '+hr+' bpm');
+  updateHR(); closeM('m-hr'); saveToStorage(); toast('FC: '+hr+' bpm');
 }
 function updateHR(){
   const zones=['Riposo','Leggera','Moderata','Intensa','Massima'];
@@ -1108,6 +1111,12 @@ function copyPr(){
   navigator.clipboard.writeText(p).then(()=>toast('✓ Prompt copiato!')).catch(()=>toast('Copia non disponibile'));
 }
 
+
+// Salva prima di chiudere/nascondere la pagina
+window.addEventListener('pagehide', saveToStorage);
+window.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') saveToStorage(); });
+window.addEventListener('beforeunload', saveToStorage);
+
 // ── INSTALL BANNER ─────────────────────────────────────────
 window.addEventListener('load',()=>{
   const isStandalone=window.matchMedia('(display-mode:standalone)').matches||window.navigator.standalone;
@@ -1118,6 +1127,76 @@ window.addEventListener('load',()=>{
 });
 
 // ── INIT ───────────────────────────────────────────────────
+loadFromStorage();
+
+// ── PERSISTENZA localStorage ───────────────────────────────
+const LS_SESSIONS = 'gymforge_sessions';
+const LS_LIB      = 'gymforge_lib';
+const LS_BW       = 'gymforge_bw';
+const LS_ACTIVE   = 'gymforge_active';
+
+function saveToStorage(){
+  try{
+    localStorage.setItem(LS_SESSIONS, JSON.stringify(sessions));
+    localStorage.setItem(LS_LIB, JSON.stringify(lib));
+    localStorage.setItem(LS_BW, String(bw));
+    if(wActive){
+      const snap={wName,wType,wStart,wKcal,wVol,wSets,hr,bw,
+        wExs:JSON.parse(JSON.stringify(wExs)),
+        wLog:wLog.slice(0,50)};
+      localStorage.setItem(LS_ACTIVE, JSON.stringify(snap));
+    } else {
+      localStorage.removeItem(LS_ACTIVE);
+    }
+  }catch(e){console.warn('save error',e);}
+}
+
+function loadFromStorage(){
+  try{
+    const s1=localStorage.getItem(LS_SESSIONS);
+    if(s1){const p=JSON.parse(s1);if(Array.isArray(p))sessions=p;}
+    const s2=localStorage.getItem(LS_LIB);
+    if(s2){const p=JSON.parse(s2);if(Array.isArray(p)&&p.length)lib=p;}
+    const s3=localStorage.getItem(LS_BW);
+    if(s3)bw=parseFloat(s3)||75;
+    document.getElementById('bw-in').value=bw;
+    const s4=localStorage.getItem(LS_ACTIVE);
+    if(s4){
+      const snap=JSON.parse(s4);
+      if(snap&&snap.wName){
+        const resume=confirm('Sessione "'+snap.wName+'" non completata trovata.\nVuoi ripristinarla?');
+        if(resume){
+          wName=snap.wName;wType=snap.wType||'all';wStart=snap.wStart;
+          wKcal=snap.wKcal||0;wVol=snap.wVol||0;wSets=snap.wSets||0;
+          hr=snap.hr||0;bw=snap.bw||75;
+          wExs=snap.wExs||[];wLog=snap.wLog||[];
+          wActive=true;
+          document.getElementById('pane-start').style.display='none';
+          document.getElementById('pane-active').style.display='block';
+          document.getElementById('w-name').textContent=wName;
+          if(wInterval)clearInterval(wInterval);
+          wInterval=setInterval(()=>{
+            const s=Math.floor((Date.now()-wStart)/1000);
+            const mm=String(Math.floor(s/60)).padStart(2,'0'),ss=String(s%60).padStart(2,'0');
+            document.getElementById('w-time').textContent=mm+':'+ss+' in corso';
+            if(hr>0){wKcal=Math.round(hrMet(hr)*bw*(s/3600));document.getElementById('mw-kcal').textContent=wKcal;}
+          },1000);
+          renderExList();updateHR();
+          setTimeout(()=>toast('✓ Sessione ripristinata',3000),500);
+        } else {
+          localStorage.removeItem(LS_ACTIVE);
+        }
+      }
+    }
+  }catch(e){console.warn('load error',e);}
+}
+
+setInterval(saveToStorage, 20000);
+window.addEventListener('pagehide', saveToStorage);
+window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveToStorage();});
+window.addEventListener('beforeunload', saveToStorage);
+
+loadFromStorage();
 renderLib(); renderLibFilters(); updateHR(); renderTval(); setNavColors();
 </script>
 </body>
