@@ -233,17 +233,7 @@ textarea{resize:none;min-height:80px;}
 .fc-bpm-big{font-size:72px;font-weight:800;letter-spacing:-3px;line-height:1;font-variant-numeric:tabular-nums;}
 .fc-bpm-unit{font-size:16px;color:var(--text2);margin-top:4px;}
 .fc-zone-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;margin-top:8px;}
-/* rPPG camera */
-.rppg-wrap{position:relative;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:1;max-width:280px;margin:0 auto;}
-.rppg-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.5);}
-.rppg-ring{width:100px;height:100px;border-radius:50%;border:3px solid rgba(249,115,22,.4);display:flex;align-items:center;justify-content:center;position:relative;}
-.rppg-ring svg{position:absolute;top:-3px;left:-3px;width:106px;height:106px;}
-.rppg-pulse{width:60px;height:60px;border-radius:50%;background:rgba(249,115,22,.2);display:flex;align-items:center;justify-content:center;font-size:28px;}
-.rppg-pulse.beating{animation:heartbeat .6s ease-in-out infinite;}
-@keyframes heartbeat{0%,100%{transform:scale(1)}30%{transform:scale(1.25)}60%{transform:scale(1.1)}}
-.signal-bar{display:flex;align-items:flex-end;gap:3px;height:32px;margin-top:8px;}
-.signal-bar div{width:6px;border-radius:3px;background:#F97316;transition:height .1s;}
-.waveform-canvas{width:100%;height:60px;border-radius:10px;background:var(--navy3);margin-top:8px;}
+
 /* history FC */
 .fc-hist-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
 .fc-hist-row:last-child{border-bottom:none;}
@@ -384,63 +374,6 @@ textarea{resize:none;min-height:80px;}
       </div>
       <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:4px;font-weight:600;text-transform:uppercase;">
         <span>Z1 Riposo</span><span>Z2 Grasso</span><span>Z3 Aerobica</span><span>Z4 Soglia</span><span>Z5 Max</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- METODO 1: rPPG FOTOCAMERA -->
-  <div class="fc-method-card" id="fc-card-rppg">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;" onclick="toggleFcMethod('rppg')">
-      <div class="fc-icon-wrap" style="background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);">📷</div>
-      <div style="flex:1;">
-        <div style="font-size:15px;font-weight:700;color:#fff;">Fotocamera (rPPG)</div>
-        <div style="font-size:12px;color:var(--text3);margin-top:1px;">Appoggia il dito alla cam posteriore</div>
-      </div>
-      <svg id="chev-rppg" viewBox="0 0 24 24" style="width:20px;height:20px;fill:#7A8FA8;transition:transform .25s;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
-    </div>
-
-    <div id="rppg-body" style="display:none;">
-      <!-- video + canvas nascosti per analisi -->
-      <video id="rppg-video" autoplay playsinline muted style="display:none;"></video>
-      <canvas id="rppg-canvas" style="display:none;"></canvas>
-
-      <div class="rppg-wrap" id="rppg-preview-wrap">
-        <video id="rppg-video-preview" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;"></video>
-        <div class="rppg-overlay" id="rppg-overlay">
-          <div class="rppg-ring">
-            <svg viewBox="0 0 106 106">
-              <circle cx="53" cy="53" r="50" fill="none" stroke="rgba(249,115,22,.3)" stroke-width="4"/>
-              <circle cx="53" cy="53" r="50" fill="none" stroke="#F97316" stroke-width="4"
-                stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"
-                id="rppg-progress" transform="rotate(-90 53 53)" style="transition:stroke-dashoffset .3s;"/>
-            </svg>
-            <div class="rppg-pulse" id="rppg-heart">❤️</div>
-          </div>
-          <div id="rppg-status" style="color:#fff;font-size:13px;font-weight:600;margin-top:12px;text-align:center;padding:0 20px;">Premi Start per iniziare</div>
-          <div id="rppg-bpm-live" style="font-size:36px;font-weight:800;color:#F97316;margin-top:6px;font-variant-numeric:tabular-nums;display:none;">--</div>
-        </div>
-      </div>
-
-      <!-- waveform -->
-      <canvas class="waveform-canvas" id="rppg-waveform" height="60"></canvas>
-      <div style="display:flex;justify-content:center;gap:8px;margin-top:4px;">
-        <div class="signal-bar" id="signal-bars">
-          <div style="height:8px;background:var(--border2);"></div>
-          <div style="height:8px;background:var(--border2);"></div>
-          <div style="height:8px;background:var(--border2);"></div>
-          <div style="height:8px;background:var(--border2);"></div>
-          <div style="height:8px;background:var(--border2);"></div>
-        </div>
-        <div style="font-size:11px;color:var(--text3);margin-top:4px;" id="signal-quality">Qualità segnale: —</div>
-      </div>
-
-      <div style="background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:11px;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--text2);line-height:1.6;">
-        💡 <strong style="color:#F97316;">Come usare:</strong> Premi Start, poi appoggia delicatamente il polpastrello dell'indice sulla fotocamera posteriore coprendo anche il flash LED. Tieni fermo per 20-30 secondi.
-      </div>
-
-      <div style="display:flex;gap:8px;margin-top:10px;">
-        <button class="btn btn-primary" style="flex:2;" id="rppg-btn" onclick="toggleRppg()">▶ Start misurazione</button>
-        <button class="btn btn-ghost btn-sm" style="flex:1;" id="rppg-save-btn" onclick="saveFcReading('rppg')" style="display:none;">Salva</button>
       </div>
     </div>
   </div>
@@ -804,26 +737,58 @@ textarea{resize:none;min-height:80px;}
           <div style="width:12px;height:12px;border-radius:50%;background:transparent;" id="seo-cardio-dot"></div>
         </div>
       </div>
-      <!-- cardio inline form -->
+      <!-- cardio inline form — pannelli separati per macchina -->
       <div id="seo-cardio-form" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
-        <div class="field-group"><label>Tipo</label>
-          <select id="es-cardio-type" onchange="updateEndCardioFields()">
-            <option value="tr">🏃 Tapis Roulant</option>
-            <option value="bk">🚴 Bike / Cyclette</option>
-            <option value="ro">🚣 Vogatore</option>
-          </select>
+        <!-- selettore macchina -->
+        <div style="display:flex;gap:6px;margin-bottom:12px;">
+          <button class="btn btn-sm" id="ec-btn-tr" onclick="selectEndMachine('tr')" style="flex:1;font-size:12px;">🏃 Tapis</button>
+          <button class="btn btn-sm" id="ec-btn-bk" onclick="selectEndMachine('bk')" style="flex:1;font-size:12px;">🚴 Bike</button>
+          <button class="btn btn-sm" id="ec-btn-ro" onclick="selectEndMachine('ro')" style="flex:1;font-size:12px;">🚣 Vogatore</button>
         </div>
-        <div class="grid2" id="es-cardio-fields">
-          <div class="field-group"><label>Durata (min)</label><input type="number" id="es-c-min" value="20" min="1" max="180" inputmode="numeric" oninput="calcEndCardio()"></div>
-          <div class="field-group" id="es-c-f2-wrap"><label id="es-c-f2-lbl">Velocità (km/h)</label><input type="number" id="es-c-f2" value="8" step="0.5" inputmode="decimal" oninput="calcEndCardio()"></div>
+
+        <!-- TAPIS -->
+        <div id="ec-panel-tr">
+          <div class="grid2" style="margin-bottom:8px;">
+            <div class="field-group"><label>Durata (min)</label><input type="number" id="ec-tr-min" value="20" min="1" max="180" inputmode="numeric" oninput="calcEndCardioNew()"></div>
+            <div class="field-group"><label>Velocità (km/h)</label><input type="number" id="ec-tr-vel" value="8" min="1" max="30" step="0.5" inputmode="decimal" oninput="calcEndCardioNew()"></div>
+          </div>
+          <div class="field-group">
+            <label>Inclinazione: <span id="ec-tr-inc-val" style="color:#F97316;font-weight:700;">1%</span></label>
+            <input type="range" id="ec-tr-inc" min="0" max="15" value="1" step="0.5" style="width:100%;accent-color:#F97316;" oninput="document.getElementById('ec-tr-inc-val').textContent=this.value+'%';calcEndCardioNew()">
+          </div>
         </div>
-        <div class="field-group" id="es-c-f3-wrap"><label id="es-c-f3-lbl">Inclinazione (%)</label>
-          <input type="range" id="es-c-f3" min="0" max="15" value="1" step="0.5" oninput="document.getElementById('es-c-f3-val').textContent=this.value; calcEndCardio()" style="width:100%;accent-color:#F97316;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:2px;"><span>0</span><span id="es-c-f3-val" style="color:#F97316;font-weight:700;">1</span><span>15</span></div>
+
+        <!-- BIKE -->
+        <div id="ec-panel-bk" style="display:none;">
+          <div class="grid2" style="margin-bottom:8px;">
+            <div class="field-group"><label>Durata (min)</label><input type="number" id="ec-bk-min" value="20" min="1" max="180" inputmode="numeric" oninput="calcEndCardioNew()"></div>
+            <div class="field-group"><label>Distanza (km)</label><input type="number" id="ec-bk-dist" value="8" min="0.1" max="200" step="0.1" inputmode="decimal" oninput="calcEndCardioNew()"></div>
+          </div>
+          <div class="field-group">
+            <label>Resistenza: <span id="ec-bk-res-val" style="color:#60A5FA;font-weight:700;">Livello 8</span></label>
+            <input type="range" id="ec-bk-res" min="1" max="20" value="8" style="width:100%;accent-color:#60A5FA;" oninput="document.getElementById('ec-bk-res-val').textContent='Livello '+this.value;calcEndCardioNew()">
+          </div>
         </div>
-        <div class="cm-result" id="es-cardio-result">
-          <div><div class="cm-result-val" id="es-c-kcal" style="font-size:18px;">—</div><div class="cm-result-lbl">kcal cardio</div></div>
-          <div style="text-align:right;"><div style="font-size:15px;font-weight:700;color:#fff;" id="es-c-extra">—</div><div class="cm-result-lbl" id="es-c-extra-lbl">km</div></div>
+
+        <!-- VOGATORE -->
+        <div id="ec-panel-ro" style="display:none;">
+          <div class="grid2" style="margin-bottom:8px;">
+            <div class="field-group"><label>Durata (min)</label><input type="number" id="ec-ro-min" value="15" min="1" max="120" inputmode="numeric" oninput="calcEndCardioNew()"></div>
+            <div class="field-group"><label>Distanza (m)</label><input type="number" id="ec-ro-dist" value="3000" min="100" max="50000" step="100" inputmode="numeric" oninput="calcEndCardioNew()"></div>
+          </div>
+          <div class="field-group"><label>Intensità</label>
+            <select id="ec-ro-int" onchange="calcEndCardioNew()">
+              <option value="low">Bassa — recupero attivo</option>
+              <option value="mid" selected>Media — allenamento</option>
+              <option value="high">Alta — interval training</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- risultato -->
+        <div class="cm-result" style="margin-top:10px;">
+          <div><div class="cm-result-val" id="ec-kcal" style="font-size:18px;">—</div><div class="cm-result-lbl">kcal stimate</div></div>
+          <div style="text-align:right;"><div style="font-size:15px;font-weight:700;color:#fff;" id="ec-extra">—</div><div class="cm-result-lbl" id="ec-extra-lbl"></div></div>
         </div>
       </div>
     </div>
@@ -1035,6 +1000,10 @@ function openAddExModal(){
       `<optgroup label="${m}">${exs.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')}</optgroup>`
     ).join('');
   }
+  sel.selectedIndex = 0;
+  document.getElementById('ae-sets').value = 3;
+  document.getElementById('ae-reps').value = 10;
+  document.getElementById('ae-notes').value = '';
   document.getElementById('addex-title').textContent=wType==='all'?'Aggiungi esercizio':'Aggiungi — '+wName;
   openM('m-addex');
 }
@@ -1179,8 +1148,10 @@ function confirmLogSet(){
 }
 
 function confirmAddEx(){
-  const id=+document.getElementById('ae-sel').value;
-  const ex=lib.find(e=>e.id===id); if(!ex) return;
+  const sel = document.getElementById('ae-sel');
+  const id = parseInt(sel.options[sel.selectedIndex]?.value || sel.value, 10);
+  const ex = lib.find(e=>e.id===id);
+  if(!ex){ toast('Seleziona un esercizio valido'); return; }
   wExs.push({
     id:Date.now(), exId:id, name:ex.name, muscle:ex.muscle, type:ex.type,
     targetSets:+document.getElementById('ae-sets').value||3,
@@ -1536,12 +1507,7 @@ loadFromStorage();
 // ── SEZIONE FC ──────────────────────────────────────────────
 let fcReadings = [];        // {bpm, time, method, zone}
 let fcSessionReadings = []; // rilevazioni sessione corrente
-let rppgRunning = false;
-let rppgStream = null;
-let rppgInterval = null;
-let rppgSamples = [];
-let rppgWaveData = [];
-let rppgMeasuredBpm = 0;
+
 let fcMethodOpen = null;
 
 const FC_ZONES = [
@@ -1557,7 +1523,7 @@ function getFcZone(bpm){
 }
 
 function toggleFcMethod(method){
-  const bodies = ['rppg','zepp','gfit'];
+  const bodies = ['zepp','gfit'];
   bodies.forEach(m => {
     const body = document.getElementById(m+'-body');
     const chev = document.getElementById('chev-'+m);
@@ -1567,7 +1533,6 @@ function toggleFcMethod(method){
       body.style.display = isOpen ? 'none' : 'block';
       chev.style.transform = isOpen ? '' : 'rotate(180deg)';
       card.classList.toggle('fc-active', !isOpen);
-      if(isOpen && m === 'rppg' && rppgRunning) stopRppg();
     } else {
       body.style.display = 'none';
       chev.style.transform = '';
@@ -1584,220 +1549,7 @@ function tryDeepLink(url, fallbackId){
   }, 2000);
 }
 
-// ── rPPG ────────────────────────────────────────────────────
-async function toggleRppg(){
-  if(rppgRunning){ stopRppg(); return; }
-  await startRppg();
-}
-
-async function startRppg(){
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: {ideal:'environment'}, // fotocamera posteriore
-        width:{ideal:320}, height:{ideal:240},
-        frameRate:{ideal:30}
-      }
-    });
-    rppgStream = stream;
-    // preview
-    const preview = document.getElementById('rppg-video-preview');
-    preview.srcObject = stream;
-    // canvas nascosto per analisi
-    const video = document.getElementById('rppg-video');
-    video.srcObject = stream;
-    await video.play();
-
-    rppgRunning = true;
-    rppgSamples = [];
-    rppgWaveData = [];
-    rppgMeasuredBpm = 0;
-
-    document.getElementById('rppg-btn').textContent = '⏹ Stop';
-    document.getElementById('rppg-status').textContent = 'Appoggia il dito alla fotocamera...';
-    document.getElementById('rppg-bpm-live').style.display = 'block';
-    document.getElementById('rppg-bpm-live').textContent = '...';
-
-    // avvia loop analisi
-    rppgInterval = setInterval(analyzeRppgFrame, 33); // ~30fps
-
-    // timer progresso (30 sec per stima stabile)
-    let elapsed = 0;
-    const progressTimer = setInterval(()=>{
-      elapsed++;
-      const pct = Math.min(elapsed/30, 1);
-      const offset = 314 * (1 - pct);
-      const circle = document.getElementById('rppg-progress');
-      if(circle) circle.setAttribute('stroke-dashoffset', Math.round(offset));
-      if(elapsed >= 30){
-        clearInterval(progressTimer);
-        document.getElementById('rppg-status').textContent = 'Misurazione completata ✓';
-      } else if(elapsed < 5){
-        document.getElementById('rppg-status').textContent = 'Avvicina il dito... ('+elapsed+'/30s)';
-      } else if(elapsed < 15){
-        document.getElementById('rppg-status').textContent = 'Analisi in corso... ('+elapsed+'/30s)';
-      } else {
-        document.getElementById('rppg-status').textContent = 'Quasi pronto... ('+elapsed+'/30s)';
-      }
-    }, 1000);
-
-  } catch(err) {
-    let msg = 'Fotocamera non disponibile.';
-    if(err.name === 'NotAllowedError') msg = 'Permesso fotocamera negato. Vai nelle impostazioni Chrome e abilita la fotocamera per questa pagina.';
-    else if(err.name === 'NotFoundError') msg = 'Nessuna fotocamera trovata.';
-    toast(msg, 4000);
-    document.getElementById('rppg-status').textContent = msg;
-  }
-}
-
-function stopRppg(){
-  rppgRunning = false;
-  if(rppgStream){ rppgStream.getTracks().forEach(t => t.stop()); rppgStream = null; }
-  if(rppgInterval){ clearInterval(rppgInterval); rppgInterval = null; }
-  document.getElementById('rppg-btn').textContent = '▶ Start misurazione';
-  document.getElementById('rppg-heart').classList.remove('beating');
-  if(rppgMeasuredBpm > 0){
-    document.getElementById('rppg-status').textContent = 'Risultato: ' + rppgMeasuredBpm + ' bpm';
-    document.getElementById('rppg-save-btn').style.display = 'inline-flex';
-  }
-}
-
-function analyzeRppgFrame(){
-  const video = document.getElementById('rppg-video');
-  const canvas = document.getElementById('rppg-canvas');
-  if(!video || video.readyState < 2) return;
-
-  const ctx = canvas.getContext('2d');
-  canvas.width = 64; canvas.height = 64;
-  ctx.drawImage(video, 0, 0, 64, 64);
-
-  const data = ctx.getImageData(0, 0, 64, 64).data;
-  let r=0, g=0, b=0, count=0;
-  // campiona pixel centrali (dove il dito copre la cam)
-  for(let y=20;y<44;y++){
-    for(let x=20;x<44;x++){
-      const i=(y*64+x)*4;
-      r += data[i]; g += data[i+1]; b += data[i+2];
-      count++;
-    }
-  }
-  r /= count; g /= count; b /= count;
-
-  // Usa il canale verde (più sensibile alle variazioni PPG)
-  // normalizzato rispetto alla luminosità totale
-  const lum = (r+g+b)/3 || 1;
-  const signal = g/lum;
-
-  rppgSamples.push({t: Date.now(), r, g, b, signal});
-  rppgWaveData.push(signal);
-  if(rppgWaveData.length > 150) rppgWaveData.shift();
-
-  // Richiede almeno 5 sec di campioni (~150 frame a 30fps)
-  if(rppgSamples.length > 150){
-    rppgSamples = rppgSamples.slice(-300); // tieni ultimi 10s
-
-    // Calcola BPM tramite zero-crossing sul segnale filtrato
-    const bpm = estimateBpmFromSignal(rppgSamples);
-    if(bpm > 0){
-      rppgMeasuredBpm = bpm;
-      document.getElementById('rppg-bpm-live').textContent = bpm;
-      document.getElementById('rppg-heart').classList.add('beating');
-
-      // Aggiorna display principale
-      updateFcDisplay(bpm, 'rPPG');
-    }
-
-    // qualità segnale: varianza del canale rosso (alta = dito appoggiato)
-    const rVals = rppgSamples.slice(-90).map(s=>s.r);
-    const rMean = rVals.reduce((a,v)=>a+v,0)/rVals.length;
-    const rVar = rVals.reduce((a,v)=>a+Math.pow(v-rMean,2),0)/rVals.length;
-    const quality = Math.min(100, Math.round(rVar * 2));
-    updateSignalQuality(quality);
-  }
-
-  drawWaveform();
-}
-
-function estimateBpmFromSignal(samples){
-  if(samples.length < 90) return 0;
-  const recent = samples.slice(-180); // ultimi 6s
-  const signals = recent.map(s => s.signal);
-
-  // Moving average per smoothing
-  const smoothed = signals.map((v,i,arr) => {
-    const window = arr.slice(Math.max(0,i-4), i+5);
-    return window.reduce((a,b)=>a+b,0)/window.length;
-  });
-
-  const mean = smoothed.reduce((a,b)=>a+b,0)/smoothed.length;
-
-  // Conta zero-crossing (da sotto a sopra media)
-  let crossings = 0;
-  let lastAbove = smoothed[0] > mean;
-  for(let i=1;i<smoothed.length;i++){
-    const above = smoothed[i] > mean;
-    if(above && !lastAbove) crossings++;
-    lastAbove = above;
-  }
-
-  // Durata periodo in secondi
-  const durationMs = recent[recent.length-1].t - recent[0].t;
-  const durationSec = durationMs / 1000;
-  if(durationSec < 2) return 0;
-
-  const bpm = Math.round((crossings / durationSec) * 60);
-
-  // Filtra valori fisiologicamente plausibili
-  if(bpm < 40 || bpm > 220) return 0;
-  return bpm;
-}
-
-function updateSignalQuality(quality){
-  const bars = document.querySelectorAll('#signal-bars div');
-  const heights = [4, 8, 14, 20, 28];
-  bars.forEach((bar, i) => {
-    const threshold = (i+1) * 20;
-    bar.style.height = (quality >= threshold ? heights[i] : heights[0]) + 'px';
-    bar.style.background = quality >= threshold ? '#F97316' : 'rgba(255,255,255,.1)';
-  });
-  const label = quality > 80 ? '🟢 Ottima' : quality > 50 ? '🟡 Buona' : quality > 20 ? '🟠 Scarsa — avvicina il dito' : '🔴 Nessun segnale';
-  const el = document.getElementById('signal-quality');
-  if(el) el.textContent = label;
-}
-
-function drawWaveform(){
-  const canvas = document.getElementById('rppg-waveform');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const w = canvas.offsetWidth || 300;
-  const h = 60;
-  canvas.width = w; canvas.height = h;
-
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle = '#162950';
-  ctx.fillRect(0,0,w,h);
-
-  if(rppgWaveData.length < 2) return;
-
-  const data = rppgWaveData.slice(-Math.floor(w/2));
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const range = max - min || 1;
-
-  ctx.beginPath();
-  ctx.strokeStyle = '#F97316';
-  ctx.lineWidth = 1.5;
-  ctx.lineJoin = 'round';
-
-  data.forEach((v, i) => {
-    const x = (i / data.length) * w;
-    const y = h - ((v - min) / range) * (h - 8) - 4;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-}
-
-// ── FC display unificato ────────────────────────────────────
+async async // ── FC display unificato ────────────────────────────────────
 function updateFcDisplay(bpm, method){
   // Aggiorna display principale
   document.getElementById('fc-bpm-main').textContent = bpm;
@@ -1848,23 +1600,7 @@ function updateFcSessionStats(){
   document.getElementById('fc-max-val').textContent = max;
 }
 
-function saveFcReading(method){
-  if(rppgMeasuredBpm > 0){
-    const reading = {
-      bpm: rppgMeasuredBpm,
-      time: new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),
-      date: new Date().toLocaleDateString('it-IT'),
-      method: 'rPPG fotocamera',
-      zone: getFcZone(rppgMeasuredBpm).name
-    };
-    fcReadings.push(reading);
-    updateFcDisplay(rppgMeasuredBpm, 'rPPG');
-    renderFcHistory();
-    saveToStorage();
-    toast('✓ FC salvata: '+rppgMeasuredBpm+' bpm ('+reading.zone+')',3000);
-    stopRppg();
-  }
-}
+
 
 function saveFcManual(source){
   const inputId = source === 'zepp' ? 'zepp-bpm-input' : 'gfit-bpm-input';
@@ -1895,7 +1631,7 @@ function renderFcHistory(){
     el.innerHTML='<div class="empty-state">Nessuna rilevazione ancora</div>';
     return;
   }
-  const methodIcons = {'rPPG fotocamera':'📷','Amazfit Zepp':'⌚','Google Fit':'💚'};
+  const methodIcons = {'Amazfit Zepp':'⌚','Google Fit':'💚','Manuale':'✏️'};
   el.innerHTML = fcReadings.slice().reverse().map(r=>{
     const zone = getFcZone(r.bpm);
     return `<div class="fc-hist-row">
@@ -2022,8 +1758,9 @@ function openEndSessionModal(){
     document.getElementById('seo-'+t+'-form').style.display='none';
   });
   renderEndCoreExercises();
-  updateEndCardioFields();
-  calcEndCardio();
+  endMachineType = 'tr';
+  selectEndMachine('tr');
+  calcEndCardioNew();
   openM('m-endsession');
 }
 
@@ -2039,57 +1776,6 @@ function toggleEndOption(type){
     document.getElementById('seo-core-dot').style.background = endCoreEnabled?'#4ADE80':'transparent';
     document.getElementById('seo-core-form').style.display = endCoreEnabled?'block':'none';
   }
-}
-
-function updateEndCardioFields(){
-  const type = document.getElementById('es-cardio-type').value;
-  const f2lbl = document.getElementById('es-c-f2-lbl');
-  const f2 = document.getElementById('es-c-f2');
-  const f3wrap = document.getElementById('es-c-f3-wrap');
-  const f3lbl = document.getElementById('es-c-f3-lbl');
-  if(type==='tr'){
-    f2lbl.textContent='Velocità (km/h)'; f2.value='8'; f2.step='0.5';
-    f3wrap.style.display='block'; f3lbl.textContent='Inclinazione (%)';
-  } else if(type==='bk'){
-    f2lbl.textContent='Distanza (km)'; f2.value='8'; f2.step='0.1';
-    f3wrap.style.display='block'; f3lbl.textContent='Resistenza (1-20)';
-    document.getElementById('es-c-f3').max='20'; document.getElementById('es-c-f3').value='8';
-    document.getElementById('es-c-f3-val').textContent='8';
-  } else {
-    f2lbl.textContent='Distanza (m)'; f2.value='3000'; f2.step='100';
-    f3wrap.style.display='none';
-  }
-  calcEndCardio();
-}
-
-function calcEndCardio(){
-  const type = document.getElementById('es-cardio-type').value;
-  const min = parseFloat(document.getElementById('es-c-min').value)||0;
-  const f2val = parseFloat(document.getElementById('es-c-f2').value)||0;
-  const f3val = parseFloat(document.getElementById('es-c-f3').value)||0;
-  const bwKg = bw||75;
-  let kcal=0, extra='—', extraLbl='';
-  if(type==='tr'){
-    let met = 2.5 + (f2val*0.9) + (f3val*0.5);
-    kcal = Math.round(met * bwKg * (min/60));
-    const dist = Math.round(f2val * min/60 * 10)/10;
-    extra = dist+' km'; extraLbl='distanza';
-  } else if(type==='bk'){
-    let met = 4 + (f3val*0.4);
-    kcal = Math.round(met * bwKg * (min/60));
-    const vel = min>0 ? Math.round(f2val/min*60*10)/10 : 0;
-    extra = vel+' km/h'; extraLbl='vel. media';
-  } else {
-    let met = 7;
-    kcal = Math.round(met * bwKg * (min/60));
-    const secTot=min*60;
-    const pace = f2val>0 ? Math.round(secTot/(f2val/500)) : 0;
-    const pm=String(Math.floor(pace/60)).padStart(2,'0'), ps=String(pace%60).padStart(2,'0');
-    extra = f2val>0 ? pm+':'+ps : '—'; extraLbl='pace/500m';
-  }
-  document.getElementById('es-c-kcal').textContent = kcal||'—';
-  document.getElementById('es-c-extra').textContent = extra;
-  if(document.getElementById('es-c-extra-lbl')) document.getElementById('es-c-extra-lbl').textContent = extraLbl;
 }
 
 function addCoreExInEnd(){
@@ -2135,31 +1821,98 @@ function updateCoreEx(i, exId){
 }
 function removeCoreEx(i){ endCoreExercises.splice(i,1); renderEndCoreExercises(); }
 
+
+// ── FINE SESSIONE — selettore macchina cardio ──────────────
+let endMachineType = 'tr';
+
+function selectEndMachine(type){
+  endMachineType = type;
+  // pannelli
+  ['tr','bk','ro'].forEach(t=>{
+    const panel = document.getElementById('ec-panel-'+t);
+    const btn   = document.getElementById('ec-btn-'+t);
+    if(panel) panel.style.display = t===type ? 'block' : 'none';
+    if(btn){
+      btn.style.background   = t===type ? '#F97316' : '';
+      btn.style.borderColor  = t===type ? '#F97316' : '';
+      btn.style.color        = t===type ? '#fff'    : '';
+    }
+  });
+  calcEndCardioNew();
+}
+
+function calcEndCardioNew(){
+  const bwKg = bw || 75;
+  let kcal = 0, extra = '—', extraLbl = '';
+  if(endMachineType === 'tr'){
+    const min = parseFloat(document.getElementById('ec-tr-min').value)||0;
+    const vel = parseFloat(document.getElementById('ec-tr-vel').value)||0;
+    const inc = parseFloat(document.getElementById('ec-tr-inc').value)||0;
+    const met = 2.5 + (vel*0.9) + (inc*0.5);
+    kcal = Math.round(met * bwKg * (min/60));
+    const dist = Math.round(vel * min/60 * 10)/10;
+    extra = dist + ' km'; extraLbl = 'distanza';
+  } else if(endMachineType === 'bk'){
+    const min  = parseFloat(document.getElementById('ec-bk-min').value)||0;
+    const dist = parseFloat(document.getElementById('ec-bk-dist').value)||0;
+    const res  = parseFloat(document.getElementById('ec-bk-res').value)||8;
+    const met  = 4 + (res * 0.4);
+    kcal = Math.round(met * bwKg * (min/60));
+    const vel = min>0 ? Math.round(dist/min*60*10)/10 : 0;
+    extra = vel + ' km/h'; extraLbl = 'vel. media';
+  } else {
+    const min  = parseFloat(document.getElementById('ec-ro-min').value)||0;
+    const dist = parseFloat(document.getElementById('ec-ro-dist').value)||0;
+    const intMap = {low:5, mid:7, high:9};
+    const intVal = document.getElementById('ec-ro-int').value;
+    const met = intMap[intVal]||7;
+    kcal = Math.round(met * bwKg * (min/60));
+    const secTot = min*60;
+    const pace = dist>0 ? Math.round(secTot/(dist/500)) : 0;
+    const pm = String(Math.floor(pace/60)).padStart(2,'0');
+    const ps = String(pace%60).padStart(2,'0');
+    extra = dist>0 ? pm+':'+ps : '—'; extraLbl = 'pace/500m';
+  }
+  const kcalEl = document.getElementById('ec-kcal');
+  const extraEl = document.getElementById('ec-extra');
+  const extraLblEl = document.getElementById('ec-extra-lbl');
+  if(kcalEl) kcalEl.textContent = kcal||'—';
+  if(extraEl) extraEl.textContent = extra;
+  if(extraLblEl) extraLblEl.textContent = extraLbl;
+}
+
 function confirmEndSession(){
   // Raccogli dati cardio se abilitato
   let cardioEntry = null;
   if(endCardioEnabled){
-    const type = document.getElementById('es-cardio-type').value;
-    const min = parseFloat(document.getElementById('es-c-min').value)||0;
-    const f2val = parseFloat(document.getElementById('es-c-f2').value)||0;
-    const f3val = parseFloat(document.getElementById('es-c-f3').value)||0;
+    const type = endMachineType;
     const bwKg = bw||75;
     let kcal=0, label='';
     if(type==='tr'){
-      let met = 2.5 + (f2val*0.9) + (f3val*0.5);
+      const min = parseFloat(document.getElementById('ec-tr-min').value)||0;
+      const vel = parseFloat(document.getElementById('ec-tr-vel').value)||0;
+      const inc = parseFloat(document.getElementById('ec-tr-inc').value)||0;
+      const met = 2.5 + (vel*0.9) + (inc*0.5);
       kcal = Math.round(met * bwKg * (min/60));
-      const dist = Math.round(f2val*min/60*10)/10;
-      label = 'Tapis '+f2val+'km/h · '+f3val+'% · '+min+'min';
-      cardioEntry = {type,min,vel:f2val,inc:f3val,kcal,dist,label,date:new Date().toLocaleDateString('it-IT')};
+      const dist = Math.round(vel*min/60*10)/10;
+      label = 'Tapis '+vel+'km/h · '+inc+'% · '+min+'min';
+      cardioEntry = {type,min,vel,inc,kcal,dist,label,date:new Date().toLocaleDateString('it-IT')};
     } else if(type==='bk'){
-      let met = 4 + (f3val*0.4);
+      const min  = parseFloat(document.getElementById('ec-bk-min').value)||0;
+      const dist = parseFloat(document.getElementById('ec-bk-dist').value)||0;
+      const res  = parseFloat(document.getElementById('ec-bk-res').value)||8;
+      const met  = 4 + (res*0.4);
       kcal = Math.round(met * bwKg * (min/60));
-      label = 'Bike '+f2val+'km · liv.'+f3val+' · '+min+'min';
-      cardioEntry = {type,min,dist:f2val,res:f3val,kcal,label,date:new Date().toLocaleDateString('it-IT')};
+      label = 'Bike '+dist+'km · liv.'+res+' · '+min+'min';
+      cardioEntry = {type,min,dist,res,kcal,label,date:new Date().toLocaleDateString('it-IT')};
     } else {
-      kcal = Math.round(7 * bwKg * (min/60));
-      label = 'Vogatore '+f2val+'m · '+min+'min';
-      cardioEntry = {type,min,dist:f2val,kcal,label,date:new Date().toLocaleDateString('it-IT')};
+      const min  = parseFloat(document.getElementById('ec-ro-min').value)||0;
+      const dist = parseFloat(document.getElementById('ec-ro-dist').value)||0;
+      const intVal = document.getElementById('ec-ro-int').value;
+      const intMap = {low:5,mid:7,high:9};
+      kcal = Math.round((intMap[intVal]||7) * bwKg * (min/60));
+      label = 'Vogatore '+dist+'m · '+min+'min';
+      cardioEntry = {type,min,dist,intensity:intVal,kcal,label,date:new Date().toLocaleDateString('it-IT')};
     }
     cardioSessions.push(cardioEntry);
   }
