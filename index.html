@@ -223,6 +223,31 @@ textarea{resize:none;min-height:80px;}
 .seo-title{font-size:14px;font-weight:700;color:#fff;}
 .seo-sub{font-size:12px;color:var(--text3);margin-top:2px;}
 
+
+/* ── SEZIONE FC ─────────────────────────────────────── */
+.fc-method-card{background:var(--card2);border:1px solid var(--border2);border-radius:18px;padding:16px;margin-bottom:12px;cursor:pointer;transition:border-color .2s;}
+.fc-method-card:active{transform:scale(0.98);}
+.fc-method-card.fc-active{border-color:#F97316;background:rgba(249,115,22,.07);}
+.fc-icon-wrap{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.fc-bpm-display{text-align:center;padding:20px 0 10px;}
+.fc-bpm-big{font-size:72px;font-weight:800;letter-spacing:-3px;line-height:1;font-variant-numeric:tabular-nums;}
+.fc-bpm-unit{font-size:16px;color:var(--text2);margin-top:4px;}
+.fc-zone-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;margin-top:8px;}
+/* rPPG camera */
+.rppg-wrap{position:relative;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:1;max-width:280px;margin:0 auto;}
+.rppg-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.5);}
+.rppg-ring{width:100px;height:100px;border-radius:50%;border:3px solid rgba(249,115,22,.4);display:flex;align-items:center;justify-content:center;position:relative;}
+.rppg-ring svg{position:absolute;top:-3px;left:-3px;width:106px;height:106px;}
+.rppg-pulse{width:60px;height:60px;border-radius:50%;background:rgba(249,115,22,.2);display:flex;align-items:center;justify-content:center;font-size:28px;}
+.rppg-pulse.beating{animation:heartbeat .6s ease-in-out infinite;}
+@keyframes heartbeat{0%,100%{transform:scale(1)}30%{transform:scale(1.25)}60%{transform:scale(1.1)}}
+.signal-bar{display:flex;align-items:flex-end;gap:3px;height:32px;margin-top:8px;}
+.signal-bar div{width:6px;border-radius:3px;background:#F97316;transition:height .1s;}
+.waveform-canvas{width:100%;height:60px;border-radius:10px;background:var(--navy3);margin-top:8px;}
+/* history FC */
+.fc-hist-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.fc-hist-row:last-child{border-bottom:none;}
+
 /* INSTALL BANNER */
 .install-banner{display:none;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);border-radius:14px;padding:12px 14px;margin-bottom:12px;align-items:center;gap:10px;}
 .install-banner.visible{display:flex;}
@@ -238,7 +263,7 @@ textarea{resize:none;min-height:80px;}
     <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg></div>
     <span class="logo-text">Gym<span>Forge</span></span>
   </div>
-  <div class="hr-chip" onclick="openM('m-hr')">
+  <div class="hr-chip" onclick="goTab('fc',document.getElementById('nb-fc'))">
     <div class="hr-dot"></div>
     <span class="hr-chip-text" id="hr-top">— bpm</span>
   </div>
@@ -265,6 +290,10 @@ textarea{resize:none;min-height:80px;}
   <button class="nav-btn" id="nb-cardio" onclick="goTab('cardio',this)">
     <svg viewBox="0 0 24 24"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>
     <span class="nav-label">Cardio</span>
+  </button>
+  <button class="nav-btn" id="nb-fc" onclick="goTab('fc',this)">
+    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    <span class="nav-label">FC</span>
   </button>
   <button class="nav-btn" id="nb-export" onclick="goTab('export',this)">
     <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -311,6 +340,189 @@ textarea{resize:none;min-height:80px;}
   </div>
 </div>
 
+
+
+<!-- FC - FREQUENZA CARDIACA -->
+<div class="section" id="tab-fc">
+  <div style="padding:4px 0 14px;">
+    <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px;">Frequenza Cardiaca ❤️</div>
+    <div style="font-size:14px;color:var(--text3);margin-top:3px;">Tre metodi di rilevazione a tua scelta</div>
+  </div>
+
+  <!-- DISPLAY FC ATTUALE -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="fc-bpm-display">
+      <div class="fc-bpm-big" id="fc-bpm-main" style="color:#F97316;">--</div>
+      <div class="fc-bpm-unit">battiti per minuto</div>
+      <div id="fc-zone-badge" style="display:none;">
+        <div class="fc-zone-badge" id="fc-zone-inner"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:4px;">
+      <div style="text-align:center;background:var(--navy3);border-radius:11px;padding:8px 16px;">
+        <div style="font-size:18px;font-weight:800;color:#60A5FA;" id="fc-min-val">--</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px;">min sessione</div>
+      </div>
+      <div style="text-align:center;background:var(--navy3);border-radius:11px;padding:8px 16px;">
+        <div style="font-size:18px;font-weight:800;color:#FBBF24;" id="fc-avg-val">--</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px;">media sessione</div>
+      </div>
+      <div style="text-align:center;background:var(--navy3);border-radius:11px;padding:8px 16px;">
+        <div style="font-size:18px;font-weight:800;color:#F97316;" id="fc-max-val">--</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px;">max sessione</div>
+      </div>
+    </div>
+    <!-- zone bar -->
+    <div style="margin-top:14px;">
+      <div style="font-size:10px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">Zone cardiache</div>
+      <div class="zone-strip" id="fc-zone-strip">
+        <div class="zone-seg" id="fz1" style="background:#378ADD;opacity:.25;"></div>
+        <div class="zone-seg" id="fz2" style="background:#1D9E75;opacity:.25;"></div>
+        <div class="zone-seg" id="fz3" style="background:#BA7517;opacity:.25;"></div>
+        <div class="zone-seg" id="fz4" style="background:#D85A30;opacity:.25;"></div>
+        <div class="zone-seg" id="fz5" style="background:#E24B4A;opacity:.25;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:4px;font-weight:600;text-transform:uppercase;">
+        <span>Z1 Riposo</span><span>Z2 Grasso</span><span>Z3 Aerobica</span><span>Z4 Soglia</span><span>Z5 Max</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METODO 1: rPPG FOTOCAMERA -->
+  <div class="fc-method-card" id="fc-card-rppg">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;" onclick="toggleFcMethod('rppg')">
+      <div class="fc-icon-wrap" style="background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);">📷</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:#fff;">Fotocamera (rPPG)</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:1px;">Appoggia il dito alla cam posteriore</div>
+      </div>
+      <svg id="chev-rppg" viewBox="0 0 24 24" style="width:20px;height:20px;fill:#7A8FA8;transition:transform .25s;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
+    </div>
+
+    <div id="rppg-body" style="display:none;">
+      <!-- video + canvas nascosti per analisi -->
+      <video id="rppg-video" autoplay playsinline muted style="display:none;"></video>
+      <canvas id="rppg-canvas" style="display:none;"></canvas>
+
+      <div class="rppg-wrap" id="rppg-preview-wrap">
+        <video id="rppg-video-preview" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;"></video>
+        <div class="rppg-overlay" id="rppg-overlay">
+          <div class="rppg-ring">
+            <svg viewBox="0 0 106 106">
+              <circle cx="53" cy="53" r="50" fill="none" stroke="rgba(249,115,22,.3)" stroke-width="4"/>
+              <circle cx="53" cy="53" r="50" fill="none" stroke="#F97316" stroke-width="4"
+                stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"
+                id="rppg-progress" transform="rotate(-90 53 53)" style="transition:stroke-dashoffset .3s;"/>
+            </svg>
+            <div class="rppg-pulse" id="rppg-heart">❤️</div>
+          </div>
+          <div id="rppg-status" style="color:#fff;font-size:13px;font-weight:600;margin-top:12px;text-align:center;padding:0 20px;">Premi Start per iniziare</div>
+          <div id="rppg-bpm-live" style="font-size:36px;font-weight:800;color:#F97316;margin-top:6px;font-variant-numeric:tabular-nums;display:none;">--</div>
+        </div>
+      </div>
+
+      <!-- waveform -->
+      <canvas class="waveform-canvas" id="rppg-waveform" height="60"></canvas>
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:4px;">
+        <div class="signal-bar" id="signal-bars">
+          <div style="height:8px;background:var(--border2);"></div>
+          <div style="height:8px;background:var(--border2);"></div>
+          <div style="height:8px;background:var(--border2);"></div>
+          <div style="height:8px;background:var(--border2);"></div>
+          <div style="height:8px;background:var(--border2);"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;" id="signal-quality">Qualità segnale: —</div>
+      </div>
+
+      <div style="background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:11px;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--text2);line-height:1.6;">
+        💡 <strong style="color:#F97316;">Come usare:</strong> Premi Start, poi appoggia delicatamente il polpastrello dell'indice sulla fotocamera posteriore coprendo anche il flash LED. Tieni fermo per 20-30 secondi.
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-primary" style="flex:2;" id="rppg-btn" onclick="toggleRppg()">▶ Start misurazione</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1;" id="rppg-save-btn" onclick="saveFcReading('rppg')" style="display:none;">Salva</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- METODO 2: ZEPP / AMAZFIT -->
+  <div class="fc-method-card" id="fc-card-zepp">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;" onclick="toggleFcMethod('zepp')">
+      <div class="fc-icon-wrap" style="background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.3);">⌚</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:#fff;">Amazfit / Zepp</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:1px;">Apre l'app Zepp sul tuo GTR2</div>
+      </div>
+      <svg id="chev-zepp" viewBox="0 0 24 24" style="width:20px;height:20px;fill:#7A8FA8;transition:transform .25s;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
+    </div>
+    <div id="zepp-body" style="display:none;">
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">
+        Apri Zepp per leggere la FC in tempo reale dal tuo <strong style="color:#fff;">Amazfit GTR2</strong>, poi torna qui e inserisci il valore.
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <a href="zepp://" class="btn btn-primary" style="flex:1;min-width:140px;text-decoration:none;" onclick="tryDeepLink('zepp://', 'zepp-fallback')">
+          ⌚ Apri Zepp
+        </a>
+        <a href="intent://com.huami.watch.hmwatchmanager/#Intent;scheme=zepp;package=com.huami.watch.hmwatchmanager;end" class="btn btn-ghost btn-sm" style="flex:1;min-width:140px;text-decoration:none;" id="zepp-fallback">
+          Zepp (alternativa)
+        </a>
+      </div>
+      <div id="zepp-store-links" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <a href="https://play.google.com/store/apps/details?id=com.huami.watch.hmwatchmanager" target="_blank" class="btn btn-ghost btn-sm" style="flex:1;min-width:120px;font-size:11px;text-decoration:none;">
+          📲 Installa Zepp (Play Store)
+        </a>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:12px;">
+        <label>BPM letto su Zepp</label>
+        <div style="display:flex;gap:8px;margin-top:6px;">
+          <input type="number" id="zepp-bpm-input" placeholder="es. 142" min="40" max="220" inputmode="numeric" style="flex:1;">
+          <button class="btn btn-primary btn-sm" onclick="saveFcManual('zepp')">Salva</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METODO 3: GOOGLE FIT -->
+  <div class="fc-method-card" id="fc-card-gfit">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;" onclick="toggleFcMethod('gfit')">
+      <div class="fc-icon-wrap" style="background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);">💚</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:#fff;">Google Fit</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:1px;">Sincronizzato con Amazfit GTR2</div>
+      </div>
+      <svg id="chev-gfit" viewBox="0 0 24 24" style="width:20px;height:20px;fill:#7A8FA8;transition:transform .25s;flex-shrink:0;"><path d="M7 10l5 5 5-5z"/></svg>
+    </div>
+    <div id="gfit-body" style="display:none;">
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">
+        Apri Google Fit per vedere la FC sincronizzata dal GTR2, poi inserisci il valore qui.
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <a href="googlefit://fit.google.com" class="btn btn-green" style="flex:1;min-width:140px;text-decoration:none;background:#4ADE80;color:#0A1628;border-color:#4ADE80;font-weight:700;" onclick="tryDeepLink('googlefit://fit.google.com','gfit-fallback')">
+          💚 Apri Google Fit
+        </a>
+        <a href="https://fit.google.com" target="_blank" class="btn btn-ghost btn-sm" style="flex:1;min-width:140px;text-decoration:none;" id="gfit-fallback">
+          Fit (web)
+        </a>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness" target="_blank" class="btn btn-ghost btn-sm" style="flex:1;min-width:120px;font-size:11px;text-decoration:none;">
+          📲 Installa Google Fit
+        </a>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:12px;">
+        <label>BPM letto su Google Fit</label>
+        <div style="display:flex;gap:8px;margin-top:6px;">
+          <input type="number" id="gfit-bpm-input" placeholder="es. 138" min="40" max="220" inputmode="numeric" style="flex:1;">
+          <button class="btn btn-primary btn-sm" onclick="saveFcManual('gfit')">Salva</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORICO FC -->
+  <div class="section-head" style="margin-top:4px;"><span class="section-label">Storico rilevazioni FC</span></div>
+  <div class="card"><div id="fc-history-list"><div class="empty-state">Nessuna rilevazione ancora</div></div></div>
+</div>
 
 <!-- CARDIO -->
 <div class="section" id="tab-cardio">
@@ -450,7 +662,7 @@ textarea{resize:none;min-height:80px;}
         </div>
         <div style="font-size:12px;color:var(--text3);margin-top:2px;" id="hr-zone">Nessun segnale</div>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="openM('m-hr')">Inserisci</button>
+      <button class="btn btn-ghost btn-sm" onclick="goTab('fc',document.getElementById('nb-fc'))">Inserisci</button>
     </div>
     <div class="zone-strip" id="zone-strip">
       <div class="zone-seg" style="background:#378ADD;opacity:.3;"></div>
@@ -798,6 +1010,7 @@ function goTab(id,btn){
   btn.classList.add('active'); setNavColors();
   if(id==='library'){libFilter='all';renderLibFilters();renderLib();}
   if(id==='cardio'){renderCardioLog();initCardioCalcs();}
+  if(id==='fc'){renderFcHistory();}
   if(id==='stats'){renderStats();renderChart(currentChartType);}
   if(id==='export') doExport();
 }
@@ -1319,6 +1532,384 @@ window.addEventListener('load',()=>{
 loadFromStorage();
 
 
+
+// ── SEZIONE FC ──────────────────────────────────────────────
+let fcReadings = [];        // {bpm, time, method, zone}
+let fcSessionReadings = []; // rilevazioni sessione corrente
+let rppgRunning = false;
+let rppgStream = null;
+let rppgInterval = null;
+let rppgSamples = [];
+let rppgWaveData = [];
+let rppgMeasuredBpm = 0;
+let fcMethodOpen = null;
+
+const FC_ZONES = [
+  {name:'Z1 Riposo',    color:'#378ADD', min:0,   max:99},
+  {name:'Z2 Brucia grassi', color:'#1D9E75', min:100, max:119},
+  {name:'Z3 Aerobica',  color:'#FBBF24', min:120, max:139},
+  {name:'Z4 Soglia',    color:'#D85A30', min:140, max:159},
+  {name:'Z5 Massima',   color:'#E24B4A', min:160, max:999},
+];
+
+function getFcZone(bpm){
+  return FC_ZONES.find(z => bpm >= z.min && bpm <= z.max) || FC_ZONES[0];
+}
+
+function toggleFcMethod(method){
+  const bodies = ['rppg','zepp','gfit'];
+  bodies.forEach(m => {
+    const body = document.getElementById(m+'-body');
+    const chev = document.getElementById('chev-'+m);
+    const card = document.getElementById('fc-card-'+m);
+    if(m === method){
+      const isOpen = body.style.display !== 'none';
+      body.style.display = isOpen ? 'none' : 'block';
+      chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+      card.classList.toggle('fc-active', !isOpen);
+      if(isOpen && m === 'rppg' && rppgRunning) stopRppg();
+    } else {
+      body.style.display = 'none';
+      chev.style.transform = '';
+      card.classList.remove('fc-active');
+    }
+  });
+}
+
+function tryDeepLink(url, fallbackId){
+  // Prova il deep link, dopo 2s se non ha funzionato mostra link alternativo
+  setTimeout(()=>{
+    const fb = document.getElementById(fallbackId);
+    if(fb) fb.style.border = '1px solid #F97316';
+  }, 2000);
+}
+
+// ── rPPG ────────────────────────────────────────────────────
+async function toggleRppg(){
+  if(rppgRunning){ stopRppg(); return; }
+  await startRppg();
+}
+
+async function startRppg(){
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: {ideal:'environment'}, // fotocamera posteriore
+        width:{ideal:320}, height:{ideal:240},
+        frameRate:{ideal:30}
+      }
+    });
+    rppgStream = stream;
+    // preview
+    const preview = document.getElementById('rppg-video-preview');
+    preview.srcObject = stream;
+    // canvas nascosto per analisi
+    const video = document.getElementById('rppg-video');
+    video.srcObject = stream;
+    await video.play();
+
+    rppgRunning = true;
+    rppgSamples = [];
+    rppgWaveData = [];
+    rppgMeasuredBpm = 0;
+
+    document.getElementById('rppg-btn').textContent = '⏹ Stop';
+    document.getElementById('rppg-status').textContent = 'Appoggia il dito alla fotocamera...';
+    document.getElementById('rppg-bpm-live').style.display = 'block';
+    document.getElementById('rppg-bpm-live').textContent = '...';
+
+    // avvia loop analisi
+    rppgInterval = setInterval(analyzeRppgFrame, 33); // ~30fps
+
+    // timer progresso (30 sec per stima stabile)
+    let elapsed = 0;
+    const progressTimer = setInterval(()=>{
+      elapsed++;
+      const pct = Math.min(elapsed/30, 1);
+      const offset = 314 * (1 - pct);
+      const circle = document.getElementById('rppg-progress');
+      if(circle) circle.setAttribute('stroke-dashoffset', Math.round(offset));
+      if(elapsed >= 30){
+        clearInterval(progressTimer);
+        document.getElementById('rppg-status').textContent = 'Misurazione completata ✓';
+      } else if(elapsed < 5){
+        document.getElementById('rppg-status').textContent = 'Avvicina il dito... ('+elapsed+'/30s)';
+      } else if(elapsed < 15){
+        document.getElementById('rppg-status').textContent = 'Analisi in corso... ('+elapsed+'/30s)';
+      } else {
+        document.getElementById('rppg-status').textContent = 'Quasi pronto... ('+elapsed+'/30s)';
+      }
+    }, 1000);
+
+  } catch(err) {
+    let msg = 'Fotocamera non disponibile.';
+    if(err.name === 'NotAllowedError') msg = 'Permesso fotocamera negato. Vai nelle impostazioni Chrome e abilita la fotocamera per questa pagina.';
+    else if(err.name === 'NotFoundError') msg = 'Nessuna fotocamera trovata.';
+    toast(msg, 4000);
+    document.getElementById('rppg-status').textContent = msg;
+  }
+}
+
+function stopRppg(){
+  rppgRunning = false;
+  if(rppgStream){ rppgStream.getTracks().forEach(t => t.stop()); rppgStream = null; }
+  if(rppgInterval){ clearInterval(rppgInterval); rppgInterval = null; }
+  document.getElementById('rppg-btn').textContent = '▶ Start misurazione';
+  document.getElementById('rppg-heart').classList.remove('beating');
+  if(rppgMeasuredBpm > 0){
+    document.getElementById('rppg-status').textContent = 'Risultato: ' + rppgMeasuredBpm + ' bpm';
+    document.getElementById('rppg-save-btn').style.display = 'inline-flex';
+  }
+}
+
+function analyzeRppgFrame(){
+  const video = document.getElementById('rppg-video');
+  const canvas = document.getElementById('rppg-canvas');
+  if(!video || video.readyState < 2) return;
+
+  const ctx = canvas.getContext('2d');
+  canvas.width = 64; canvas.height = 64;
+  ctx.drawImage(video, 0, 0, 64, 64);
+
+  const data = ctx.getImageData(0, 0, 64, 64).data;
+  let r=0, g=0, b=0, count=0;
+  // campiona pixel centrali (dove il dito copre la cam)
+  for(let y=20;y<44;y++){
+    for(let x=20;x<44;x++){
+      const i=(y*64+x)*4;
+      r += data[i]; g += data[i+1]; b += data[i+2];
+      count++;
+    }
+  }
+  r /= count; g /= count; b /= count;
+
+  // Usa il canale verde (più sensibile alle variazioni PPG)
+  // normalizzato rispetto alla luminosità totale
+  const lum = (r+g+b)/3 || 1;
+  const signal = g/lum;
+
+  rppgSamples.push({t: Date.now(), r, g, b, signal});
+  rppgWaveData.push(signal);
+  if(rppgWaveData.length > 150) rppgWaveData.shift();
+
+  // Richiede almeno 5 sec di campioni (~150 frame a 30fps)
+  if(rppgSamples.length > 150){
+    rppgSamples = rppgSamples.slice(-300); // tieni ultimi 10s
+
+    // Calcola BPM tramite zero-crossing sul segnale filtrato
+    const bpm = estimateBpmFromSignal(rppgSamples);
+    if(bpm > 0){
+      rppgMeasuredBpm = bpm;
+      document.getElementById('rppg-bpm-live').textContent = bpm;
+      document.getElementById('rppg-heart').classList.add('beating');
+
+      // Aggiorna display principale
+      updateFcDisplay(bpm, 'rPPG');
+    }
+
+    // qualità segnale: varianza del canale rosso (alta = dito appoggiato)
+    const rVals = rppgSamples.slice(-90).map(s=>s.r);
+    const rMean = rVals.reduce((a,v)=>a+v,0)/rVals.length;
+    const rVar = rVals.reduce((a,v)=>a+Math.pow(v-rMean,2),0)/rVals.length;
+    const quality = Math.min(100, Math.round(rVar * 2));
+    updateSignalQuality(quality);
+  }
+
+  drawWaveform();
+}
+
+function estimateBpmFromSignal(samples){
+  if(samples.length < 90) return 0;
+  const recent = samples.slice(-180); // ultimi 6s
+  const signals = recent.map(s => s.signal);
+
+  // Moving average per smoothing
+  const smoothed = signals.map((v,i,arr) => {
+    const window = arr.slice(Math.max(0,i-4), i+5);
+    return window.reduce((a,b)=>a+b,0)/window.length;
+  });
+
+  const mean = smoothed.reduce((a,b)=>a+b,0)/smoothed.length;
+
+  // Conta zero-crossing (da sotto a sopra media)
+  let crossings = 0;
+  let lastAbove = smoothed[0] > mean;
+  for(let i=1;i<smoothed.length;i++){
+    const above = smoothed[i] > mean;
+    if(above && !lastAbove) crossings++;
+    lastAbove = above;
+  }
+
+  // Durata periodo in secondi
+  const durationMs = recent[recent.length-1].t - recent[0].t;
+  const durationSec = durationMs / 1000;
+  if(durationSec < 2) return 0;
+
+  const bpm = Math.round((crossings / durationSec) * 60);
+
+  // Filtra valori fisiologicamente plausibili
+  if(bpm < 40 || bpm > 220) return 0;
+  return bpm;
+}
+
+function updateSignalQuality(quality){
+  const bars = document.querySelectorAll('#signal-bars div');
+  const heights = [4, 8, 14, 20, 28];
+  bars.forEach((bar, i) => {
+    const threshold = (i+1) * 20;
+    bar.style.height = (quality >= threshold ? heights[i] : heights[0]) + 'px';
+    bar.style.background = quality >= threshold ? '#F97316' : 'rgba(255,255,255,.1)';
+  });
+  const label = quality > 80 ? '🟢 Ottima' : quality > 50 ? '🟡 Buona' : quality > 20 ? '🟠 Scarsa — avvicina il dito' : '🔴 Nessun segnale';
+  const el = document.getElementById('signal-quality');
+  if(el) el.textContent = label;
+}
+
+function drawWaveform(){
+  const canvas = document.getElementById('rppg-waveform');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.offsetWidth || 300;
+  const h = 60;
+  canvas.width = w; canvas.height = h;
+
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#162950';
+  ctx.fillRect(0,0,w,h);
+
+  if(rppgWaveData.length < 2) return;
+
+  const data = rppgWaveData.slice(-Math.floor(w/2));
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+
+  ctx.beginPath();
+  ctx.strokeStyle = '#F97316';
+  ctx.lineWidth = 1.5;
+  ctx.lineJoin = 'round';
+
+  data.forEach((v, i) => {
+    const x = (i / data.length) * w;
+    const y = h - ((v - min) / range) * (h - 8) - 4;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
+
+// ── FC display unificato ────────────────────────────────────
+function updateFcDisplay(bpm, method){
+  // Aggiorna display principale
+  document.getElementById('fc-bpm-main').textContent = bpm;
+  const zone = getFcZone(bpm);
+  document.getElementById('fc-bpm-main').style.color = zone.color;
+
+  // Badge zona
+  const badge = document.getElementById('fc-zone-badge');
+  const inner = document.getElementById('fc-zone-inner');
+  badge.style.display = 'flex';
+  inner.textContent = zone.name;
+  inner.style.background = zone.color + '22';
+  inner.style.color = zone.color;
+  inner.style.border = '1px solid ' + zone.color + '44';
+
+  // Zone strip
+  const zIds = ['fz1','fz2','fz3','fz4','fz5'];
+  const zColors = ['#378ADD','#1D9E75','#FBBF24','#D85A30','#E24B4A'];
+  const zThresh = [100,120,140,160,999];
+  let activeZ = 0;
+  for(let i=0;i<zThresh.length;i++){ if(bpm <= zThresh[i]){ activeZ=i; break; } }
+  zIds.forEach((id,i)=>{
+    const el = document.getElementById(id);
+    if(el){
+      el.style.background = zColors[i];
+      el.style.opacity = i===activeZ ? '1' : '0.2';
+      el.style.transform = i===activeZ ? 'scaleY(1.5)' : 'scaleY(1)';
+    }
+  });
+
+  // Aggiorna anche il chip in topbar e timer
+  document.getElementById('hr-top').textContent = bpm + ' bpm';
+  hr = bpm;
+
+  // Aggiungi alla sessione
+  fcSessionReadings.push({bpm, time: new Date(), method, zone: zone.name});
+  updateFcSessionStats();
+}
+
+function updateFcSessionStats(){
+  if(!fcSessionReadings.length) return;
+  const vals = fcSessionReadings.map(r=>r.bpm);
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  const avg = Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  document.getElementById('fc-min-val').textContent = min;
+  document.getElementById('fc-avg-val').textContent = avg;
+  document.getElementById('fc-max-val').textContent = max;
+}
+
+function saveFcReading(method){
+  if(rppgMeasuredBpm > 0){
+    const reading = {
+      bpm: rppgMeasuredBpm,
+      time: new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),
+      date: new Date().toLocaleDateString('it-IT'),
+      method: 'rPPG fotocamera',
+      zone: getFcZone(rppgMeasuredBpm).name
+    };
+    fcReadings.push(reading);
+    updateFcDisplay(rppgMeasuredBpm, 'rPPG');
+    renderFcHistory();
+    saveToStorage();
+    toast('✓ FC salvata: '+rppgMeasuredBpm+' bpm ('+reading.zone+')',3000);
+    stopRppg();
+  }
+}
+
+function saveFcManual(source){
+  const inputId = source === 'zepp' ? 'zepp-bpm-input' : 'gfit-bpm-input';
+  const bpm = parseInt(document.getElementById(inputId).value)||0;
+  if(bpm < 30 || bpm > 230){
+    toast('Valore non valido — inserisci tra 30 e 230 bpm');
+    return;
+  }
+  const methodLabel = source === 'zepp' ? 'Amazfit Zepp' : 'Google Fit';
+  const reading = {
+    bpm,
+    time: new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),
+    date: new Date().toLocaleDateString('it-IT'),
+    method: methodLabel,
+    zone: getFcZone(bpm).name
+  };
+  fcReadings.push(reading);
+  updateFcDisplay(bpm, methodLabel);
+  renderFcHistory();
+  saveToStorage();
+  document.getElementById(inputId).value = '';
+  toast('✓ FC da '+methodLabel+': '+bpm+' bpm ('+reading.zone+')',3000);
+}
+
+function renderFcHistory(){
+  const el = document.getElementById('fc-history-list');
+  if(!fcReadings.length){
+    el.innerHTML='<div class="empty-state">Nessuna rilevazione ancora</div>';
+    return;
+  }
+  const methodIcons = {'rPPG fotocamera':'📷','Amazfit Zepp':'⌚','Google Fit':'💚'};
+  el.innerHTML = fcReadings.slice().reverse().map(r=>{
+    const zone = getFcZone(r.bpm);
+    return `<div class="fc-hist-row">
+      <span style="font-size:18px;">${methodIcons[r.method]||'❤️'}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;font-weight:700;color:#fff;">${r.bpm} <span style="font-size:11px;font-weight:400;color:var(--text3);">bpm</span></div>
+        <div style="font-size:11px;color:var(--text3);">${r.method} · ${r.date} ${r.time}</div>
+      </div>
+      <span class="pill" style="background:${zone.color}22;color:${zone.color};border:1px solid ${zone.color}44;">${r.zone}</span>
+    </div>`;
+  }).join('');
+}
+
+
 // ── CARDIO ─────────────────────────────────────────────────
 let cardioSessions = [];
 
@@ -1598,6 +2189,7 @@ function saveToStorage(){
   try{
     localStorage.setItem(LS_SESSIONS, JSON.stringify(sessions));
     localStorage.setItem('gymforge_cardio', JSON.stringify(cardioSessions));
+    localStorage.setItem('gymforge_fc', JSON.stringify(fcReadings));
     localStorage.setItem(LS_LIB, JSON.stringify(lib));
     localStorage.setItem(LS_BW, String(bw));
     if(wActive){
@@ -1617,6 +2209,8 @@ function loadFromStorage(){
     if(s1){const p=JSON.parse(s1);if(Array.isArray(p))sessions=p;}
     const s2=localStorage.getItem(LS_LIB);
     if(s2){const p=JSON.parse(s2);if(Array.isArray(p)&&p.length)lib=p;}
+    const sfc=localStorage.getItem('gymforge_fc');
+    if(sfc){const p=JSON.parse(sfc);if(Array.isArray(p))fcReadings=p;}
     const sc=localStorage.getItem('gymforge_cardio');
     if(sc){const p=JSON.parse(sc);if(Array.isArray(p))cardioSessions=p;}
     const s3=localStorage.getItem(LS_BW);
@@ -1660,7 +2254,7 @@ window.addEventListener('beforeunload', saveToStorage);
 
 loadFromStorage();
 renderLib(); renderLibFilters(); updateHR(); renderTval(); setNavColors();
-renderCardioLog(); initCardioCalcs();
+renderCardioLog(); initCardioCalcs(); renderFcHistory();
 </script>
 </body>
 </html>
