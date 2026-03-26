@@ -201,6 +201,28 @@ textarea{resize:none;min-height:80px;}
 .toast{position:fixed;bottom:calc(var(--safe-bottom) + 80px);left:50%;transform:translateX(-50%) translateY(20px);background:#1E3A6E;border:1px solid rgba(249,115,22,.4);color:#fff;padding:10px 20px;border-radius:22px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:400;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+
+/* CARDIO */
+.cardio-machine{background:var(--card2);border:1px solid var(--border2);border-radius:16px;padding:14px;margin-bottom:10px;}
+.cardio-machine.active-machine{border-color:#60A5FA;background:rgba(96,165,250,.07);}
+.cm-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;cursor:pointer;}
+.cm-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.cm-title{font-size:15px;font-weight:700;color:#fff;}
+.cm-sub{font-size:12px;color:var(--text3);margin-top:1px;}
+.cm-fields{display:grid;gap:10px;}
+.cm-result{margin-top:10px;background:var(--navy3);border-radius:11px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;}
+.cm-result-val{font-size:20px;font-weight:800;color:#60A5FA;}
+.cm-result-lbl{font-size:11px;color:var(--text2);}
+.cardio-summary{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:12px;}
+.cardio-log-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.cardio-log-row:last-child{border-bottom:none;}
+/* FINE SESSIONE MODAL */
+.session-end-option{background:var(--card2);border:1px solid var(--border2);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .15s;}
+.session-end-option:active{transform:scale(0.98);}
+.session-end-option.selected{border-color:var(--orange);background:rgba(249,115,22,.08);}
+.seo-title{font-size:14px;font-weight:700;color:#fff;}
+.seo-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+
 /* INSTALL BANNER */
 .install-banner{display:none;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);border-radius:14px;padding:12px 14px;margin-bottom:12px;align-items:center;gap:10px;}
 .install-banner.visible{display:flex;}
@@ -239,6 +261,10 @@ textarea{resize:none;min-height:80px;}
   <button class="nav-btn" id="nb-stats" onclick="goTab('stats',this)">
     <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
     <span class="nav-label">Stats</span>
+  </button>
+  <button class="nav-btn" id="nb-cardio" onclick="goTab('cardio',this)">
+    <svg viewBox="0 0 24 24"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>
+    <span class="nav-label">Cardio</span>
   </button>
   <button class="nav-btn" id="nb-export" onclick="goTab('export',this)">
     <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -283,6 +309,91 @@ textarea{resize:none;min-height:80px;}
     </div>
     <div id="ex-list"></div>
   </div>
+</div>
+
+
+<!-- CARDIO -->
+<div class="section" id="tab-cardio">
+  <div style="padding:4px 0 14px;">
+    <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px;">Cardio 🏃</div>
+    <div style="font-size:14px;color:var(--text3);margin-top:3px;">Registra la tua sessione cardio</div>
+  </div>
+
+  <!-- TAPIS ROULANT -->
+  <div class="cardio-machine" id="cm-tapis">
+    <div class="cm-header">
+      <div class="cm-icon" style="background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);">🏃</div>
+      <div><div class="cm-title">Tapis Roulant</div><div class="cm-sub">Velocità · Inclinazione · Durata</div></div>
+    </div>
+    <div class="cm-fields">
+      <div class="grid2">
+        <div><label>Durata (min)</label><input type="number" id="tr-min" value="20" min="1" max="180" inputmode="numeric" oninput="calcCardio('tr')"></div>
+        <div><label>Velocità (km/h)</label><input type="number" id="tr-vel" value="8" min="1" max="30" step="0.5" inputmode="decimal" oninput="calcCardio('tr')"></div>
+      </div>
+      <div><label>Inclinazione (%)</label>
+        <input type="range" id="tr-inc" min="0" max="15" value="1" step="0.5" oninput="document.getElementById('tr-inc-val').textContent=this.value+'%'; calcCardio('tr')" style="width:100%;accent-color:#F97316;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:3px;"><span>0%</span><span id="tr-inc-val" style="color:#F97316;font-weight:700;">1%</span><span>15%</span></div>
+      </div>
+    </div>
+    <div class="cm-result">
+      <div><div class="cm-result-val" id="tr-kcal">—</div><div class="cm-result-lbl">kcal stimate</div></div>
+      <div style="text-align:right;"><div style="font-size:16px;font-weight:700;color:#fff;" id="tr-dist">—</div><div class="cm-result-lbl">km percorsi</div></div>
+    </div>
+    <button class="btn btn-primary btn-full" style="margin-top:10px;" onclick="saveCardio('tr')">Salva sessione tapis</button>
+  </div>
+
+  <!-- BIKE -->
+  <div class="cardio-machine" id="cm-bike">
+    <div class="cm-header">
+      <div class="cm-icon" style="background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.3);">🚴</div>
+      <div><div class="cm-title">Bike / Cyclette</div><div class="cm-sub">Tempo · Distanza</div></div>
+    </div>
+    <div class="cm-fields">
+      <div class="grid2">
+        <div><label>Durata (min)</label><input type="number" id="bk-min" value="20" min="1" max="180" inputmode="numeric" oninput="calcCardio('bk')"></div>
+        <div><label>Distanza (km)</label><input type="number" id="bk-dist" value="8" min="0.1" max="200" step="0.1" inputmode="decimal" oninput="calcCardio('bk')"></div>
+      </div>
+      <div><label>Livello resistenza</label>
+        <input type="range" id="bk-res" min="1" max="20" value="8" oninput="document.getElementById('bk-res-val').textContent='Livello '+this.value; calcCardio('bk')" style="width:100%;accent-color:#60A5FA;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:3px;"><span>Facile</span><span id="bk-res-val" style="color:#60A5FA;font-weight:700;">Livello 8</span><span>Max</span></div>
+      </div>
+    </div>
+    <div class="cm-result">
+      <div><div class="cm-result-val" id="bk-kcal" style="color:#60A5FA;">—</div><div class="cm-result-lbl">kcal stimate</div></div>
+      <div style="text-align:right;"><div style="font-size:16px;font-weight:700;color:#fff;" id="bk-vel">—</div><div class="cm-result-lbl">velocità media</div></div>
+    </div>
+    <button class="btn btn-full" style="margin-top:10px;background:#60A5FA;color:#fff;border-color:#60A5FA;font-weight:700;" onclick="saveCardio('bk')">Salva sessione bike</button>
+  </div>
+
+  <!-- VOGATORE -->
+  <div class="cardio-machine" id="cm-row">
+    <div class="cm-header">
+      <div class="cm-icon" style="background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);">🚣</div>
+      <div><div class="cm-title">Vogatore</div><div class="cm-sub">Tempo · Distanza</div></div>
+    </div>
+    <div class="cm-fields">
+      <div class="grid2">
+        <div><label>Durata (min)</label><input type="number" id="ro-min" value="15" min="1" max="120" inputmode="numeric" oninput="calcCardio('ro')"></div>
+        <div><label>Distanza (m)</label><input type="number" id="ro-dist" value="3000" min="100" max="50000" step="100" inputmode="numeric" oninput="calcCardio('ro')"></div>
+      </div>
+      <div><label>Intensità</label>
+        <select id="ro-int" onchange="calcCardio('ro')">
+          <option value="low">Bassa — recupero attivo</option>
+          <option value="mid" selected>Media — allenamento</option>
+          <option value="high">Alta — interval training</option>
+        </select>
+      </div>
+    </div>
+    <div class="cm-result">
+      <div><div class="cm-result-val" id="ro-kcal" style="color:#4ADE80;">—</div><div class="cm-result-lbl">kcal stimate</div></div>
+      <div style="text-align:right;"><div style="font-size:16px;font-weight:700;color:#fff;" id="ro-pace">—</div><div class="cm-result-lbl">pace /500m</div></div>
+    </div>
+    <button class="btn btn-full" style="margin-top:10px;background:#4ADE80;color:#0A1628;border-color:#4ADE80;font-weight:700;" onclick="saveCardio('ro')">Salva sessione vogatore</button>
+  </div>
+
+  <!-- LOG CARDIO -->
+  <div class="section-head" style="margin-top:4px;"><span class="section-label">Storico cardio</span></div>
+  <div class="card"><div id="cardio-log-list"><div class="empty-state">Nessuna sessione cardio ancora</div></div></div>
 </div>
 
 <!-- LIBRARY -->
@@ -464,6 +575,72 @@ textarea{resize:none;min-height:80px;}
   </div>
 </div>
 
+
+<!-- MODAL FINE SESSIONE -->
+<div class="modal-wrap" id="m-endsession">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🏁 Fine sessione — <span id="es-name">PUSH</span></div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">Vuoi aggiungere cardio o core prima di salvare?</div>
+
+    <!-- OPZIONE CARDIO -->
+    <div class="session-end-option" id="seo-cardio" onclick="toggleEndOption('cardio')">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:22px;">🏃</span>
+        <div><div class="seo-title">Aggiungi Cardio</div><div class="seo-sub">Tapis · Bike · Vogatore</div></div>
+        <div style="margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;" id="seo-cardio-chk">
+          <div style="width:12px;height:12px;border-radius:50%;background:transparent;" id="seo-cardio-dot"></div>
+        </div>
+      </div>
+      <!-- cardio inline form -->
+      <div id="seo-cardio-form" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+        <div class="field-group"><label>Tipo</label>
+          <select id="es-cardio-type" onchange="updateEndCardioFields()">
+            <option value="tr">🏃 Tapis Roulant</option>
+            <option value="bk">🚴 Bike / Cyclette</option>
+            <option value="ro">🚣 Vogatore</option>
+          </select>
+        </div>
+        <div class="grid2" id="es-cardio-fields">
+          <div class="field-group"><label>Durata (min)</label><input type="number" id="es-c-min" value="20" min="1" max="180" inputmode="numeric" oninput="calcEndCardio()"></div>
+          <div class="field-group" id="es-c-f2-wrap"><label id="es-c-f2-lbl">Velocità (km/h)</label><input type="number" id="es-c-f2" value="8" step="0.5" inputmode="decimal" oninput="calcEndCardio()"></div>
+        </div>
+        <div class="field-group" id="es-c-f3-wrap"><label id="es-c-f3-lbl">Inclinazione (%)</label>
+          <input type="range" id="es-c-f3" min="0" max="15" value="1" step="0.5" oninput="document.getElementById('es-c-f3-val').textContent=this.value; calcEndCardio()" style="width:100%;accent-color:#F97316;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:2px;"><span>0</span><span id="es-c-f3-val" style="color:#F97316;font-weight:700;">1</span><span>15</span></div>
+        </div>
+        <div class="cm-result" id="es-cardio-result">
+          <div><div class="cm-result-val" id="es-c-kcal" style="font-size:18px;">—</div><div class="cm-result-lbl">kcal cardio</div></div>
+          <div style="text-align:right;"><div style="font-size:15px;font-weight:700;color:#fff;" id="es-c-extra">—</div><div class="cm-result-lbl" id="es-c-extra-lbl">km</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPZIONE CORE -->
+    <div class="session-end-option" id="seo-core" onclick="toggleEndOption('core')">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:22px;">⚡</span>
+        <div><div class="seo-title">Aggiungi Core</div><div class="seo-sub">Plank · Crunch · Esercizi addominali</div></div>
+        <div style="margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;" id="seo-core-chk">
+          <div style="width:12px;height:12px;border-radius:50%;background:transparent;" id="seo-core-dot"></div>
+        </div>
+      </div>
+      <!-- core inline form -->
+      <div id="seo-core-form" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+        <div id="seo-core-exercises"></div>
+        <button class="btn btn-ghost btn-sm btn-full" style="margin-top:8px;" onclick="addCoreExInEnd()">+ Aggiungi esercizio core</button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="closeM('m-endsession');wActive=true;">Annulla</button>
+      <button class="btn btn-primary" style="flex:2;" onclick="confirmEndSession()">Salva tutto ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LOG SET CORE (nel modal fine sessione) -->
+
 <!-- MODAL LOG SET -->
 <div class="modal-wrap" id="m-logset">
   <div class="modal">
@@ -620,6 +797,7 @@ function goTab(id,btn){
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active'); setNavColors();
   if(id==='library'){libFilter='all';renderLibFilters();renderLib();}
+  if(id==='cardio'){renderCardioLog();initCardioCalcs();}
   if(id==='stats'){renderStats();renderChart(currentChartType);}
   if(id==='export') doExport();
 }
@@ -666,23 +844,34 @@ function beginWorkout(name,type){
 
 function endWorkout(){
   if(!wActive) return;
+  // Apre il modal fine sessione invece di salvare subito
+  openEndSessionModal();
+}
+
+function _doEndWorkout(cardioEntry, coreEntries){
   wActive=false; clearInterval(wInterval);
   const dur=Math.round((Date.now()-wStart)/60000);
+  // aggiunge core agli esercizi della sessione se presenti
+  const allExercises = [
+    ...wExs.map(e=>({name:e.name,muscle:e.muscle,type:e.type,sets:e.sets.filter(s=>s).map((s,i)=>({n:i+1,weight:s.weight,reps:s.reps,rir:s.rir}))})),
+    ...(coreEntries||[])
+  ];
+  // calorie: pesi + cardio
+  const cardioKcal = cardioEntry ? cardioEntry.kcal : 0;
+  const totalKcal = wKcal + cardioKcal;
   // salva con dettaglio esercizi
   sessions.push({
     name:wName, date:new Date().toLocaleDateString('it-IT'),
-    dateObj:new Date(), dur, kcal:wKcal, vol:wVol, sets:wSets, hr,
-    exercises: wExs.map(e=>({
-      name:e.name, muscle:e.muscle, type:e.type,
-      sets:e.sets.filter(s=>s).map((s,i)=>({n:i+1,weight:s.weight,reps:s.reps,rir:s.rir}))
-    }))
+    dateObj:new Date(), dur, kcal:totalKcal, vol:wVol, sets:wSets, hr,
+    cardio: cardioEntry||null,
+    exercises: allExercises
   });
-  pushLog('Fine · '+dur+'min · '+wKcal+' kcal · '+wVol+' kg vol');
-  saveToStorage();
+  pushLog('Fine · '+dur+'min · '+totalKcal+' kcal · '+wVol+' kg vol'+(cardioEntry?' + '+cardioEntry.label:''));
   document.getElementById('pane-active').style.display='none';
   document.getElementById('pane-start').style.display='block';
+  renderCardioLog();
   saveToStorage();
-  toast('✓ Sessione salvata — '+wKcal+' kcal · '+wVol+' kg',3000);
+  toast('✓ Sessione salvata — '+totalKcal+' kcal · '+wVol+' kg',3000);
 }
 
 function hrMet(h){return h<100?3.5:h<120?5:h<140?6.5:h<160?8:h<180?10:12;}
@@ -1129,6 +1318,276 @@ window.addEventListener('load',()=>{
 // ── INIT ───────────────────────────────────────────────────
 loadFromStorage();
 
+
+// ── CARDIO ─────────────────────────────────────────────────
+let cardioSessions = [];
+
+function calcCardio(type){
+  const bwKg = bw || 75;
+  if(type==='tr'){
+    const min = parseFloat(document.getElementById('tr-min').value)||0;
+    const vel = parseFloat(document.getElementById('tr-vel').value)||0;
+    const inc = parseFloat(document.getElementById('tr-inc').value)||0;
+    // MET tapis: base MET da velocità + bonus inclinazione
+    let met = 2.5 + (vel * 0.9) + (inc * 0.5);
+    const kcal = Math.round(met * bwKg * (min/60));
+    const dist = Math.round(vel * min / 60 * 10) / 10;
+    document.getElementById('tr-kcal').textContent = kcal;
+    document.getElementById('tr-dist').textContent = dist + ' km';
+  } else if(type==='bk'){
+    const min = parseFloat(document.getElementById('bk-min').value)||0;
+    const dist = parseFloat(document.getElementById('bk-dist').value)||0;
+    const res = parseInt(document.getElementById('bk-res').value)||8;
+    let met = 4 + (res * 0.4);
+    const kcal = Math.round(met * bwKg * (min/60));
+    const vel = min>0 ? Math.round(dist/min*60*10)/10 : 0;
+    document.getElementById('bk-kcal').textContent = kcal;
+    document.getElementById('bk-vel').textContent = vel + ' km/h';
+  } else if(type==='ro'){
+    const min = parseFloat(document.getElementById('ro-min').value)||0;
+    const dist = parseFloat(document.getElementById('ro-dist').value)||0;
+    const intMap = {low:5,mid:7,high:9};
+    const intVal = document.getElementById('ro-int').value;
+    const met = intMap[intVal]||7;
+    const kcal = Math.round(met * bwKg * (min/60));
+    // pace per 500m
+    const totalSec = min * 60;
+    const paceSecPer500 = dist>0 ? Math.round(totalSec / (dist/500)) : 0;
+    const paceMin = String(Math.floor(paceSecPer500/60)).padStart(2,'0');
+    const paceSec = String(paceSecPer500%60).padStart(2,'0');
+    document.getElementById('ro-kcal').textContent = kcal;
+    document.getElementById('ro-pace').textContent = dist>0 ? paceMin+':'+paceSec+'/500m' : '—';
+  }
+}
+
+function saveCardio(type){
+  const bwKg = bw || 75;
+  let entry = {type, date: new Date().toLocaleDateString('it-IT'), dateObj: new Date()};
+  if(type==='tr'){
+    entry.min = parseFloat(document.getElementById('tr-min').value)||0;
+    entry.vel = parseFloat(document.getElementById('tr-vel').value)||0;
+    entry.inc = parseFloat(document.getElementById('tr-inc').value)||0;
+    let met = 2.5 + (entry.vel*0.9) + (entry.inc*0.5);
+    entry.kcal = Math.round(met * bwKg * (entry.min/60));
+    entry.dist = Math.round(entry.vel * entry.min / 60 * 10)/10;
+    entry.label = 'Tapis '+entry.vel+'km/h · '+entry.inc+'% · '+entry.min+'min';
+  } else if(type==='bk'){
+    entry.min = parseFloat(document.getElementById('bk-min').value)||0;
+    entry.dist = parseFloat(document.getElementById('bk-dist').value)||0;
+    entry.res = parseInt(document.getElementById('bk-res').value)||8;
+    let met = 4 + (entry.res*0.4);
+    entry.kcal = Math.round(met * bwKg * (entry.min/60));
+    entry.label = 'Bike '+entry.dist+'km · liv.'+entry.res+' · '+entry.min+'min';
+  } else if(type==='ro'){
+    entry.min = parseFloat(document.getElementById('ro-min').value)||0;
+    entry.dist = parseFloat(document.getElementById('ro-dist').value)||0;
+    entry.intensity = document.getElementById('ro-int').value;
+    const intMap={low:5,mid:7,high:9};
+    entry.kcal = Math.round((intMap[entry.intensity]||7) * bwKg * (entry.min/60));
+    entry.label = 'Vogatore '+entry.dist+'m · '+entry.min+'min';
+  }
+  cardioSessions.push(entry);
+  saveToStorage();
+  renderCardioLog();
+  toast('✓ '+entry.label+' — '+entry.kcal+' kcal',3000);
+}
+
+function renderCardioLog(){
+  const el = document.getElementById('cardio-log-list');
+  if(!cardioSessions.length){ el.innerHTML='<div class="empty-state">Nessuna sessione cardio ancora</div>'; return; }
+  const icons = {tr:'🏃',bk:'🚴',ro:'🚣'};
+  const colors = {tr:'#F97316',bk:'#60A5FA',ro:'#4ADE80'};
+  el.innerHTML = cardioSessions.slice().reverse().map((s,i)=>`
+    <div class="cardio-log-row">
+      <span style="font-size:20px;">${icons[s.type]||'🏃'}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.label}</div>
+        <div style="font-size:11px;color:var(--text3);">${s.date}</div>
+      </div>
+      <span class="pill" style="background:rgba(96,165,250,.15);color:${colors[s.type]||'#60A5FA'};">${s.kcal} kcal</span>
+    </div>
+  `).join('');
+}
+
+// init calcoli
+function initCardioCalcs(){
+  calcCardio('tr'); calcCardio('bk'); calcCardio('ro');
+}
+
+// ── FINE SESSIONE con cardio+core ──────────────────────────
+let endCardioEnabled = false;
+let endCoreEnabled = false;
+let endCoreExercises = [];
+
+function openEndSessionModal(){
+  endCardioEnabled = false;
+  endCoreEnabled = false;
+  endCoreExercises = [];
+  document.getElementById('es-name').textContent = wName;
+  // reset UI
+  ['cardio','core'].forEach(t=>{
+    document.getElementById('seo-'+t).classList.remove('selected');
+    document.getElementById('seo-'+t+'-dot').style.background='transparent';
+    document.getElementById('seo-'+t+'-form').style.display='none';
+  });
+  renderEndCoreExercises();
+  updateEndCardioFields();
+  calcEndCardio();
+  openM('m-endsession');
+}
+
+function toggleEndOption(type){
+  if(type==='cardio'){
+    endCardioEnabled = !endCardioEnabled;
+    document.getElementById('seo-cardio').classList.toggle('selected', endCardioEnabled);
+    document.getElementById('seo-cardio-dot').style.background = endCardioEnabled?'#F97316':'transparent';
+    document.getElementById('seo-cardio-form').style.display = endCardioEnabled?'block':'none';
+  } else {
+    endCoreEnabled = !endCoreEnabled;
+    document.getElementById('seo-core').classList.toggle('selected', endCoreEnabled);
+    document.getElementById('seo-core-dot').style.background = endCoreEnabled?'#4ADE80':'transparent';
+    document.getElementById('seo-core-form').style.display = endCoreEnabled?'block':'none';
+  }
+}
+
+function updateEndCardioFields(){
+  const type = document.getElementById('es-cardio-type').value;
+  const f2lbl = document.getElementById('es-c-f2-lbl');
+  const f2 = document.getElementById('es-c-f2');
+  const f3wrap = document.getElementById('es-c-f3-wrap');
+  const f3lbl = document.getElementById('es-c-f3-lbl');
+  if(type==='tr'){
+    f2lbl.textContent='Velocità (km/h)'; f2.value='8'; f2.step='0.5';
+    f3wrap.style.display='block'; f3lbl.textContent='Inclinazione (%)';
+  } else if(type==='bk'){
+    f2lbl.textContent='Distanza (km)'; f2.value='8'; f2.step='0.1';
+    f3wrap.style.display='block'; f3lbl.textContent='Resistenza (1-20)';
+    document.getElementById('es-c-f3').max='20'; document.getElementById('es-c-f3').value='8';
+    document.getElementById('es-c-f3-val').textContent='8';
+  } else {
+    f2lbl.textContent='Distanza (m)'; f2.value='3000'; f2.step='100';
+    f3wrap.style.display='none';
+  }
+  calcEndCardio();
+}
+
+function calcEndCardio(){
+  const type = document.getElementById('es-cardio-type').value;
+  const min = parseFloat(document.getElementById('es-c-min').value)||0;
+  const f2val = parseFloat(document.getElementById('es-c-f2').value)||0;
+  const f3val = parseFloat(document.getElementById('es-c-f3').value)||0;
+  const bwKg = bw||75;
+  let kcal=0, extra='—', extraLbl='';
+  if(type==='tr'){
+    let met = 2.5 + (f2val*0.9) + (f3val*0.5);
+    kcal = Math.round(met * bwKg * (min/60));
+    const dist = Math.round(f2val * min/60 * 10)/10;
+    extra = dist+' km'; extraLbl='distanza';
+  } else if(type==='bk'){
+    let met = 4 + (f3val*0.4);
+    kcal = Math.round(met * bwKg * (min/60));
+    const vel = min>0 ? Math.round(f2val/min*60*10)/10 : 0;
+    extra = vel+' km/h'; extraLbl='vel. media';
+  } else {
+    let met = 7;
+    kcal = Math.round(met * bwKg * (min/60));
+    const secTot=min*60;
+    const pace = f2val>0 ? Math.round(secTot/(f2val/500)) : 0;
+    const pm=String(Math.floor(pace/60)).padStart(2,'0'), ps=String(pace%60).padStart(2,'0');
+    extra = f2val>0 ? pm+':'+ps : '—'; extraLbl='pace/500m';
+  }
+  document.getElementById('es-c-kcal').textContent = kcal||'—';
+  document.getElementById('es-c-extra').textContent = extra;
+  if(document.getElementById('es-c-extra-lbl')) document.getElementById('es-c-extra-lbl').textContent = extraLbl;
+}
+
+function addCoreExInEnd(){
+  const coreLib = lib.filter(e=>['Core','Full body'].includes(e.muscle));
+  if(!coreLib.length){ toast('Nessun esercizio core in libreria'); return; }
+  endCoreExercises.push({
+    exId: coreLib[0].id,
+    name: coreLib[0].name,
+    sets: 3, reps: 15,
+    completedSets: []
+  });
+  renderEndCoreExercises();
+}
+
+function renderEndCoreExercises(){
+  const el = document.getElementById('seo-core-exercises');
+  const coreLib = lib.filter(e=>['Core','Full body'].includes(e.muscle));
+  if(!endCoreExercises.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:8px 0;">Tocca "+ Aggiungi" per inserire un esercizio core</div>';
+    return;
+  }
+  el.innerHTML = endCoreExercises.map((ex,i)=>`
+    <div style="background:var(--navy3);border-radius:12px;padding:10px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <select onchange="updateCoreEx(${i},this.value)" style="flex:1;padding:8px;font-size:13px;">
+          ${coreLib.map(e=>`<option value="${e.id}" ${e.id==ex.exId?'selected':''}>${e.name}</option>`).join('')}
+        </select>
+        <button class="btn btn-icon btn-danger btn-sm" onclick="removeCoreEx(${i})">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#F87171;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+      <div class="grid2">
+        <div><label>Serie</label><input type="number" value="${ex.sets}" min="1" max="10" inputmode="numeric" onchange="endCoreExercises[${i}].sets=+this.value"></div>
+        <div><label>Rip / sec</label><input type="number" value="${ex.reps}" min="1" max="300" inputmode="numeric" onchange="endCoreExercises[${i}].reps=+this.value"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateCoreEx(i, exId){
+  const ex = lib.find(e=>e.id==exId);
+  if(ex){ endCoreExercises[i].exId=ex.id; endCoreExercises[i].name=ex.name; }
+}
+function removeCoreEx(i){ endCoreExercises.splice(i,1); renderEndCoreExercises(); }
+
+function confirmEndSession(){
+  // Raccogli dati cardio se abilitato
+  let cardioEntry = null;
+  if(endCardioEnabled){
+    const type = document.getElementById('es-cardio-type').value;
+    const min = parseFloat(document.getElementById('es-c-min').value)||0;
+    const f2val = parseFloat(document.getElementById('es-c-f2').value)||0;
+    const f3val = parseFloat(document.getElementById('es-c-f3').value)||0;
+    const bwKg = bw||75;
+    let kcal=0, label='';
+    if(type==='tr'){
+      let met = 2.5 + (f2val*0.9) + (f3val*0.5);
+      kcal = Math.round(met * bwKg * (min/60));
+      const dist = Math.round(f2val*min/60*10)/10;
+      label = 'Tapis '+f2val+'km/h · '+f3val+'% · '+min+'min';
+      cardioEntry = {type,min,vel:f2val,inc:f3val,kcal,dist,label,date:new Date().toLocaleDateString('it-IT')};
+    } else if(type==='bk'){
+      let met = 4 + (f3val*0.4);
+      kcal = Math.round(met * bwKg * (min/60));
+      label = 'Bike '+f2val+'km · liv.'+f3val+' · '+min+'min';
+      cardioEntry = {type,min,dist:f2val,res:f3val,kcal,label,date:new Date().toLocaleDateString('it-IT')};
+    } else {
+      kcal = Math.round(7 * bwKg * (min/60));
+      label = 'Vogatore '+f2val+'m · '+min+'min';
+      cardioEntry = {type,min,dist:f2val,kcal,label,date:new Date().toLocaleDateString('it-IT')};
+    }
+    cardioSessions.push(cardioEntry);
+  }
+
+  // Raccogli dati core se abilitato
+  let coreEntries = [];
+  if(endCoreEnabled && endCoreExercises.length){
+    coreEntries = endCoreExercises.map(ex=>({
+      name: ex.name, muscle:'Core', type:'Corpo libero',
+      sets: Array.from({length:ex.sets},(_,i)=>({n:i+1,weight:0,reps:ex.reps,rir:0}))
+    }));
+  }
+
+  // Chiudi modal e procedi con endWorkout
+  closeM('m-endsession');
+  _doEndWorkout(cardioEntry, coreEntries);
+}
+
+
 // ── PERSISTENZA localStorage ───────────────────────────────
 const LS_SESSIONS = 'gymforge_sessions';
 const LS_LIB      = 'gymforge_lib';
@@ -1138,6 +1597,7 @@ const LS_ACTIVE   = 'gymforge_active';
 function saveToStorage(){
   try{
     localStorage.setItem(LS_SESSIONS, JSON.stringify(sessions));
+    localStorage.setItem('gymforge_cardio', JSON.stringify(cardioSessions));
     localStorage.setItem(LS_LIB, JSON.stringify(lib));
     localStorage.setItem(LS_BW, String(bw));
     if(wActive){
@@ -1157,6 +1617,8 @@ function loadFromStorage(){
     if(s1){const p=JSON.parse(s1);if(Array.isArray(p))sessions=p;}
     const s2=localStorage.getItem(LS_LIB);
     if(s2){const p=JSON.parse(s2);if(Array.isArray(p)&&p.length)lib=p;}
+    const sc=localStorage.getItem('gymforge_cardio');
+    if(sc){const p=JSON.parse(sc);if(Array.isArray(p))cardioSessions=p;}
     const s3=localStorage.getItem(LS_BW);
     if(s3)bw=parseFloat(s3)||75;
     document.getElementById('bw-in').value=bw;
@@ -1198,6 +1660,7 @@ window.addEventListener('beforeunload', saveToStorage);
 
 loadFromStorage();
 renderLib(); renderLibFilters(); updateHR(); renderTval(); setNavColors();
+renderCardioLog(); initCardioCalcs();
 </script>
 </body>
 </html>
