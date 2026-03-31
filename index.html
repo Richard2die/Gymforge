@@ -623,6 +623,11 @@ textarea{resize:none;min-height:80px;}
     <div class="stab" onclick="showChart('muscles',this)">Muscoli</div>
     <div class="stab" onclick="showChart('progress',this)">Progressi</div>
   </div>
+  <div id="progress-ex-wrap" style="display:none;margin-bottom:10px;">
+    <select id="progress-ex-sel" onchange="renderChart('progress')" style="font-size:13px;padding:8px 12px;">
+      <option value="">— scegli esercizio —</option>
+    </select>
+  </div>
   <div class="card">
     <div id="chart-title" style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px;">Volume per sessione (kg)</div>
     <div class="chart-wrap"><canvas id="main-chart"></canvas></div>
@@ -729,8 +734,8 @@ textarea{resize:none;min-height:80px;}
     <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">Vuoi aggiungere cardio o core prima di salvare?</div>
 
     <!-- OPZIONE CARDIO -->
-    <div class="session-end-option" id="seo-cardio" onclick="toggleEndOption('cardio')">
-      <div style="display:flex;align-items:center;gap:10px;">
+    <div class="session-end-option" id="seo-cardio">
+      <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="toggleEndOption('cardio')">
         <span style="font-size:22px;">🏃</span>
         <div><div class="seo-title">Aggiungi Cardio</div><div class="seo-sub">Tapis · Bike · Vogatore</div></div>
         <div style="margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;" id="seo-cardio-chk">
@@ -794,8 +799,8 @@ textarea{resize:none;min-height:80px;}
     </div>
 
     <!-- OPZIONE CORE -->
-    <div class="session-end-option" id="seo-core" onclick="toggleEndOption('core')">
-      <div style="display:flex;align-items:center;gap:10px;">
+    <div class="session-end-option" id="seo-core">
+      <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="toggleEndOption('core')">
         <span style="font-size:22px;">⚡</span>
         <div><div class="seo-title">Aggiungi Core</div><div class="seo-sub">Plank · Crunch · Esercizi addominali</div></div>
         <div style="margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;" id="seo-core-chk">
@@ -946,6 +951,7 @@ let lib=[
   {id:14,name:'Leg press',muscle:'Gambe',type:'Macchina',notes:''},
   {id:15,name:'Leg curl',muscle:'Gambe',type:'Macchina',notes:''},
   {id:16,name:'Hip thrust',muscle:'Glutei',type:'Bilanciere',notes:''},
+  {id:19,name:'Leg extension',muscle:'Gambe',type:'Macchina',notes:''},
   {id:17,name:'Plank',muscle:'Core',type:'Corpo libero',notes:''},
   {id:18,name:'Crunch',muscle:'Core',type:'Corpo libero',notes:''},
 ];
@@ -976,7 +982,13 @@ function goTab(id,btn){
   if(id==='library'){libFilter='all';renderLibFilters();renderLib();}
   if(id==='cardio'){renderCardioLog();initCardioCalcs();}
   if(id==='fc'){renderFcHistory();}
-  if(id==='stats'){renderStats();renderChart(currentChartType);}
+  if(id==='stats'){
+    renderStats();
+    const wrap=document.getElementById('progress-ex-wrap');
+    if(wrap) wrap.style.display=currentChartType==='progress'?'block':'none';
+    if(currentChartType==='progress') populateProgressExSelect();
+    renderChart(currentChartType);
+  }
   if(id==='export') doExport();
 }
 function openM(id){document.getElementById(id).classList.add('open');}
@@ -997,10 +1009,12 @@ function openAddExModal(){
   else{
     const g={};fl.forEach(e=>{if(!g[e.muscle])g[e.muscle]=[];g[e.muscle].push(e);});
     sel.innerHTML=Object.entries(g).map(([m,exs])=>
-      `<optgroup label="${m}">${exs.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')}</optgroup>`
+      `<optgroup label="${m}">${exs.map(e=>`<option value="${e.id}" data-exid="${e.id}">${e.name} — ${e.type}</option>`).join('')}</optgroup>`
     ).join('');
   }
   sel.selectedIndex = 0;
+  // forza selezione esplicita primo elemento
+  if(sel.options.length > 0) sel.options[0].selected = true;
   document.getElementById('ae-sets').value = 3;
   document.getElementById('ae-reps').value = 10;
   document.getElementById('ae-notes').value = '';
@@ -1149,9 +1163,10 @@ function confirmLogSet(){
 
 function confirmAddEx(){
   const sel = document.getElementById('ae-sel');
-  const id = parseInt(sel.options[sel.selectedIndex]?.value || sel.value, 10);
+  const selOpt = sel.options[sel.selectedIndex];
+  const id = parseInt(selOpt?.dataset?.exid || selOpt?.value || sel.value, 10);
   const ex = lib.find(e=>e.id===id);
-  if(!ex){ toast('Seleziona un esercizio valido'); return; }
+  if(!ex){ toast('Esercizio non trovato (id:'+id+') — riprova'); return; }
   wExs.push({
     id:Date.now(), exId:id, name:ex.name, muscle:ex.muscle, type:ex.type,
     targetSets:+document.getElementById('ae-sets').value||3,
@@ -1294,6 +1309,8 @@ function updateRing(pct){
 
 // ── STATS + CHARTS ─────────────────────────────────────────
 function renderStats(){
+  // aggiorna select esercizi se tab progress è attiva
+  if(currentChartType==='progress') populateProgressExSelect();
   document.getElementById('st-sess').textContent=sessions.length;
   document.getElementById('st-kcal').textContent=sessions.reduce((a,s)=>a+s.kcal,0);
   document.getElementById('st-vol').textContent=sessions.reduce((a,s)=>a+s.vol,0);
@@ -1313,10 +1330,32 @@ function renderStats(){
   `).join(''):'<div class="empty-state">Avvia un allenamento</div>';
 }
 
+
+function populateProgressExSelect(){
+  const sel = document.getElementById('progress-ex-sel');
+  if(!sel) return;
+  // raccogli tutti gli esercizi con almeno 2 sessioni di dati
+  const exCount = {};
+  sessions.forEach(s=>(s.exercises||[]).forEach(e=>{
+    if(e.sets && e.sets.length) exCount[e.name]=(exCount[e.name]||0)+1;
+  }));
+  const sorted = Object.entries(exCount).sort((a,b)=>b[1]-a[1]);
+  const currentVal = sel.value;
+  sel.innerHTML = '<option value="">— scegli esercizio —</option>' +
+    sorted.map(([name,count])=>
+      `<option value="${name}" ${name===currentVal?'selected':''}>${name} (${count} sess.)</option>`
+    ).join('');
+  // se nessuno selezionato, seleziona il primo con più sessioni
+  if(!sel.value && sorted.length) sel.value = sorted[0][0];
+}
 function showChart(type,btn){
   document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   currentChartType=type;
+  // mostra/nascondi select esercizio
+  const wrap = document.getElementById('progress-ex-wrap');
+  if(wrap) wrap.style.display = type==='progress' ? 'block' : 'none';
+  if(type==='progress') populateProgressExSelect();
   renderChart(type);
 }
 
@@ -1369,23 +1408,54 @@ function renderChart(type){
     currentChart=new Chart(canvas,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors.slice(0,labels.length),borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{color:'#A8B8D8',padding:12,font:{size:11}}},tooltip:{backgroundColor:'#162950',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#F0F4FF',bodyColor:'#A8B8D8',padding:10}}}});
   }
   else if(type==='progress'){
-    titleEl.textContent='Progressione peso — ultimo esercizio';
-    // prendi l'esercizio più frequente
-    const exCount={};
-    sessions.forEach(s=>(s.exercises||[]).forEach(e=>{exCount[e.name]=(exCount[e.name]||0)+1;}));
-    const topEx=Object.entries(exCount).sort((a,b)=>b[1]-a[1])[0];
-    if(!topEx){canvas.style.display='none';emptyEl.style.display='block';emptyEl.textContent='Nessun dato sugli esercizi ancora';return;}
-    const exName=topEx[0];
+    // legge l'esercizio dal select
+    const exSel = document.getElementById('progress-ex-sel');
+    const exName = exSel ? exSel.value : '';
+    if(!exName || !sessions.length){
+      canvas.style.display='none'; emptyEl.style.display='block';
+      emptyEl.textContent='Seleziona un esercizio dal menu in alto';
+      return;
+    }
     titleEl.textContent='Progressione: '+exName;
+    // costruisce punti: per ogni sessione, peso massimo usato per quell'esercizio
     const pts=[];
     sessions.forEach(s=>{
       const ex=(s.exercises||[]).find(e=>e.name===exName);
-      if(ex&&ex.sets.length){
-        const maxW=Math.max(...ex.sets.map(st=>st.weight||0));
-        pts.push({date:s.date,weight:maxW});
+      if(ex && ex.sets && ex.sets.length){
+        const maxW=Math.max(...ex.sets.map(st=>parseFloat(st.weight)||0));
+        const totVol=ex.sets.reduce((a,st)=>a+Math.round((parseFloat(st.weight)||0)*(parseInt(st.reps)||0)),0);
+        if(maxW>0) pts.push({date:s.date, weight:maxW, vol:totVol});
       }
     });
-    currentChart=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.weight),borderColor:'#4ADE80',backgroundColor:'rgba(74,222,128,.15)',borderWidth:2.5,pointBackgroundColor:'#4ADE80',pointRadius:5,tension:.3,fill:true}]},options:{...baseOpts,scales:{...baseOpts.scales,y:{...baseOpts.scales.y,title:{display:true,text:'kg',color:'#5A6E8A'}}}}});
+    if(!pts.length){
+      canvas.style.display='none'; emptyEl.style.display='block';
+      emptyEl.textContent='Nessun dato per '+exName;
+      return;
+    }
+    canvas.style.display='block'; emptyEl.style.display='none';
+    currentChart=new Chart(canvas,{
+      type:'line',
+      data:{
+        labels:pts.map(p=>p.date),
+        datasets:[
+          {label:'Peso max (kg)',data:pts.map(p=>p.weight),
+           borderColor:'#4ADE80',backgroundColor:'rgba(74,222,128,.15)',
+           borderWidth:2.5,pointBackgroundColor:'#4ADE80',pointRadius:5,tension:.3,fill:true,yAxisID:'y'},
+        ]
+      },
+      options:{...baseOpts,
+        plugins:{...baseOpts.plugins,
+          legend:{display:false},
+          tooltip:{...baseOpts.plugins.tooltip,
+            callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y} kg`}
+          }
+        },
+        scales:{
+          x:{...baseOpts.scales.x},
+          y:{...baseOpts.scales.y,title:{display:true,text:'kg max',color:'#5A6E8A'}}
+        }
+      }
+    });
   }
 }
 
@@ -1777,6 +1847,14 @@ function toggleEndOption(type){
     document.getElementById('seo-core-form').style.display = endCoreEnabled?'block':'none';
   }
 }
+
+// Impedisce che i click sugli input dentro seo-cardio/seo-core
+// si propaghino alla div padre e richiamino toggleEndOption
+document.addEventListener('click', function(e){
+  const form = e.target.closest('#seo-cardio-form, #seo-core-form');
+  if(form) e.stopPropagation();
+}, true);
+
 
 function addCoreExInEnd(){
   const coreLib = lib.filter(e=>['Core','Full body'].includes(e.muscle));
