@@ -663,6 +663,35 @@ textarea{resize:none;min-height:80px;}
     <div class="prompt-box" style="margin-top:8px;">Analizza questi dati di allenamento. Calcola: progressione del peso per esercizio settimana per settimana, trend kcal bruciate, volume totale per gruppo muscolare, recupero medio tra le serie. Identifica i punti di forza e le aree di miglioramento. Suggerisci ottimizzazioni concrete al programma.</div>
     <button class="btn btn-ghost btn-sm btn-full" style="margin-top:10px;" onclick="copyPr()">Copia prompt</button>
   </div>
+
+  <!-- STRUMENTI DATI -->
+  <div class="card" style="margin-top:4px;border-color:rgba(251,191,36,.3);">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+      <span style="font-size:18px;">🔧</span>
+      <div class="card-title">Strumenti dati</div>
+    </div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6;">Correggi esercizi inseriti erroneamente. Seleziona l'esercizio da rimuovere e le sessioni interessate.</p>
+    <div class="field-group">
+      <label>Esercizio da rimuovere</label>
+      <input type="text" id="clean-name" placeholder="es. Dips" style="min-height:44px;">
+    </div>
+    <div class="field-group">
+      <label>Da quale tipo di sessione</label>
+      <select id="clean-session" style="min-height:44px;">
+        <option value="all">Tutte le sessioni</option>
+        <option value="PUSH">Solo PUSH</option>
+        <option value="PULL">Solo PULL</option>
+        <option value="LEGS">Solo LEGS</option>
+        <option value="today">Solo sessioni di oggi</option>
+        <option value="PUSH|LEGS">PUSH e LEGS</option>
+      </select>
+    </div>
+    <div id="clean-preview" style="display:none;background:var(--navy3);border-radius:11px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--text2);line-height:1.7;"></div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="btn btn-ghost btn-sm" style="flex:1;min-height:44px;" onclick="previewClean()">Anteprima</button>
+      <button type="button" class="btn btn-danger" style="flex:1;min-height:44px;" onclick="executeClean()">Rimuovi</button>
+    </div>
+  </div>
 </div>
 
 </div><!-- /main -->
@@ -1538,6 +1567,89 @@ function doExport(){
 function toMd(h,rows){
   return['| '+h.join(' | ')+' |','| '+h.map(()=>'---').join(' | ')+' |',...rows.map(r=>'| '+r.join(' | ')+' |')].join('\n');
 }
+
+// ── STRUMENTI PULIZIA DATI ─────────────────────────────────────────────
+function matchSession(sess, filter){
+  if(filter === 'all') return true;
+  if(filter === 'today'){
+    const today = new Date().toLocaleDateString('it-IT');
+    return sess.date === today;
+  }
+  if(filter.includes('|')){
+    const parts = filter.split('|');
+    return parts.some(p => sess.name === p);
+  }
+  return sess.name === filter;
+}
+
+function findCleanTargets(){
+  const name = (document.getElementById('clean-name').value||'').trim();
+  const filter = document.getElementById('clean-session').value;
+  if(!name){ toast('Inserisci il nome esercizio da rimuovere'); return null; }
+  const targets = [];
+  sessions.forEach((sess, si) => {
+    if(!matchSession(sess, filter)) return;
+    (sess.exercises||[]).forEach((ex, ei) => {
+      if(ex.name.toLowerCase() === name.toLowerCase()){
+        targets.push({si, ei, sessName: sess.name, sessDate: sess.date, exName: ex.name,
+          sets: (ex.sets||[]).length});
+      }
+    });
+  });
+  return {name, filter, targets};
+}
+
+function previewClean(){
+  const result = findCleanTargets();
+  if(!result) return;
+  const {name, targets} = result;
+  const prev = document.getElementById('clean-preview');
+  prev.style.display = 'block';
+  if(!targets.length){
+    prev.innerHTML = '<b style="color:#4ADE80;">Nessuna occorrenza trovata</b> — "'+name+'" non presente nelle sessioni selezionate.';
+    return;
+  }
+  let html = '<b style="color:#FBBF24;">Trovate '+targets.length+' occorrenze di "'+name+'":</b><br><br>';
+  targets.forEach(t => {
+    html += '• <b>'+t.sessDate+'</b> — '+t.sessName+' ('+t.sets+' serie registrate)<br>';
+  });
+  html += '<br><span style="color:#F87171;">Tocca "Rimuovi" per eliminarle definitivamente.</span>';
+  prev.innerHTML = html;
+}
+
+function executeClean(){
+  const result = findCleanTargets();
+  if(!result) return;
+  const {name, targets} = result;
+  if(!targets.length){ toast('Nessuna occorrenza da rimuovere'); return; }
+
+  // Rimuovi dall'array sessions (in ordine inverso per non sfasare gli indici)
+  const toRemove = {};
+  targets.forEach(t => {
+    if(!toRemove[t.si]) toRemove[t.si] = [];
+    toRemove[t.si].push(t.ei);
+  });
+  Object.keys(toRemove).forEach(si => {
+    const indices = toRemove[si].sort((a,b)=>b-a); // ordine inverso
+    indices.forEach(ei => {
+      sessions[parseInt(si)].exercises.splice(ei, 1);
+    });
+  });
+
+  saveToStorage();
+  toast('✓ Rimossi '+targets.length+' esercizi "'+name+'" — dati aggiornati',3500);
+
+  // Reset UI
+  document.getElementById('clean-name').value = '';
+  document.getElementById('clean-preview').style.display = 'none';
+
+  // Aggiorna stats se visibili
+  if(document.getElementById('tab-stats').classList.contains('active')){
+    renderStats();
+    renderChart(currentChartType);
+  }
+}
+
 function copyExp(){
   if(!expData)doExport();
   navigator.clipboard.writeText(expData).then(()=>toast('✓ Copiato negli appunti!')).catch(()=>toast('Copia non disponibile'));
