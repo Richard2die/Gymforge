@@ -187,7 +187,7 @@ textarea{resize:none;min-height:80px;}
 /* MODAL */
 .modal-wrap{display:none;position:fixed;inset:0;z-index:300;align-items:flex-end;background:rgba(5,10,20,.8);}
 .modal-wrap.open{display:flex;}
-.modal{background:var(--navy2);border:1px solid var(--border2);border-radius:26px 26px 0 0;padding:20px 16px calc(var(--safe-bottom) + 28px);width:100%;max-height:92vh;overflow-y:auto;}
+.modal{background:var(--navy2);border:1px solid var(--border2);border-radius:26px 26px 0 0;padding:20px 16px calc(var(--safe-bottom) + 28px);width:100%;max-height:92vh;overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
 .modal-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 18px;}
 .modal-title{font-size:17px;font-weight:800;color:#fff;margin-bottom:14px;}
 .modal-footer{display:flex;gap:8px;margin-top:16px;}
@@ -728,100 +728,100 @@ textarea{resize:none;min-height:80px;}
 
 <!-- MODAL FINE SESSIONE -->
 <div class="modal-wrap" id="m-endsession">
-  <div class="modal">
+  <div class="modal" style="max-height:96vh;overflow-y:scroll;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;">
     <div class="modal-handle"></div>
     <div class="modal-title">🏁 Fine sessione — <span id="es-name">PUSH</span></div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">Vuoi aggiungere cardio o core prima di salvare?</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.5;">Vuoi aggiungere cardio o core prima di salvare?</div>
 
-    <!-- OPZIONE CARDIO -->
-    <div class="session-end-option" id="seo-cardio">
-      <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="toggleEndOption('cardio')">
-        <span style="font-size:22px;">🏃</span>
-        <div><div class="seo-title">Aggiungi Cardio</div><div class="seo-sub">Tapis · Bike · Vogatore</div></div>
-        <div style="margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;" id="seo-cardio-chk">
-          <div style="width:12px;height:12px;border-radius:50%;background:transparent;" id="seo-cardio-dot"></div>
+    <!-- OPZIONE CARDIO — header separato dal form -->
+    <div style="background:var(--card2);border:1px solid var(--border2);border-radius:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer;border-radius:14px;" id="seo-cardio" onclick="toggleEndOption('cardio')">
+        <span style="font-size:22px;flex-shrink:0;">🏃</span>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;color:#fff;">Aggiungi Cardio</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:1px;">Tapis · Bike · Vogatore</div>
+        </div>
+        <div style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);background:var(--navy3);display:flex;align-items:center;justify-content:center;flex-shrink:0;" id="seo-cardio-chk">
+          <svg id="seo-cardio-dot" viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--text3);display:none;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
         </div>
       </div>
-      <!-- cardio inline form — pannelli separati per macchina -->
-      <div id="seo-cardio-form" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+      <!-- form cardio — padding e touch separati dall'header -->
+      <div id="seo-cardio-form" style="display:none;padding:0 14px 14px;border-top:1px solid var(--border);">
         <!-- selettore macchina -->
-        <div style="display:flex;gap:6px;margin-bottom:12px;">
-          <button class="btn btn-sm" id="ec-btn-tr" onclick="selectEndMachine('tr')" style="flex:1;font-size:12px;">🏃 Tapis</button>
-          <button class="btn btn-sm" id="ec-btn-bk" onclick="selectEndMachine('bk')" style="flex:1;font-size:12px;">🚴 Bike</button>
-          <button class="btn btn-sm" id="ec-btn-ro" onclick="selectEndMachine('ro')" style="flex:1;font-size:12px;">🚣 Vogatore</button>
+        <div style="display:flex;gap:6px;margin-bottom:14px;margin-top:12px;">
+          <button type="button" class="btn btn-sm" id="ec-btn-tr" onclick="selectEndMachine('tr')" style="flex:1;font-size:12px;min-height:44px;">🏃 Tapis</button>
+          <button type="button" class="btn btn-sm" id="ec-btn-bk" onclick="selectEndMachine('bk')" style="flex:1;font-size:12px;min-height:44px;">🚴 Bike</button>
+          <button type="button" class="btn btn-sm" id="ec-btn-ro" onclick="selectEndMachine('ro')" style="flex:1;font-size:12px;min-height:44px;">🚣 Vogatore</button>
         </div>
-
         <!-- TAPIS -->
         <div id="ec-panel-tr">
-          <div class="grid2" style="margin-bottom:8px;">
-            <div class="field-group"><label>Durata (min)</label><input type="number" id="ec-tr-min" value="20" min="1" max="180" inputmode="numeric" oninput="calcEndCardioNew()"></div>
-            <div class="field-group"><label>Velocità (km/h)</label><input type="number" id="ec-tr-vel" value="8" min="1" max="30" step="0.5" inputmode="decimal" oninput="calcEndCardioNew()"></div>
+          <div class="grid2" style="margin-bottom:10px;">
+            <div><label>Durata (min)</label><input type="number" id="ec-tr-min" value="20" min="1" max="180" inputmode="numeric" style="min-height:48px;" oninput="calcEndCardioNew()"></div>
+            <div><label>Velocità (km/h)</label><input type="number" id="ec-tr-vel" value="8" min="1" max="30" step="0.5" inputmode="decimal" style="min-height:48px;" oninput="calcEndCardioNew()"></div>
           </div>
-          <div class="field-group">
+          <div style="margin-bottom:10px;">
             <label>Inclinazione: <span id="ec-tr-inc-val" style="color:#F97316;font-weight:700;">1%</span></label>
-            <input type="range" id="ec-tr-inc" min="0" max="15" value="1" step="0.5" style="width:100%;accent-color:#F97316;" oninput="document.getElementById('ec-tr-inc-val').textContent=this.value+'%';calcEndCardioNew()">
+            <input type="range" id="ec-tr-inc" min="0" max="15" value="1" step="0.5" style="width:100%;height:36px;accent-color:#F97316;cursor:pointer;" oninput="document.getElementById('ec-tr-inc-val').textContent=this.value+'%';calcEndCardioNew()">
           </div>
         </div>
-
         <!-- BIKE -->
         <div id="ec-panel-bk" style="display:none;">
-          <div class="grid2" style="margin-bottom:8px;">
-            <div class="field-group"><label>Durata (min)</label><input type="number" id="ec-bk-min" value="20" min="1" max="180" inputmode="numeric" oninput="calcEndCardioNew()"></div>
-            <div class="field-group"><label>Distanza (km)</label><input type="number" id="ec-bk-dist" value="8" min="0.1" max="200" step="0.1" inputmode="decimal" oninput="calcEndCardioNew()"></div>
+          <div class="grid2" style="margin-bottom:10px;">
+            <div><label>Durata (min)</label><input type="number" id="ec-bk-min" value="20" min="1" max="180" inputmode="numeric" style="min-height:48px;" oninput="calcEndCardioNew()"></div>
+            <div><label>Distanza (km)</label><input type="number" id="ec-bk-dist" value="8" min="0.1" max="200" step="0.1" inputmode="decimal" style="min-height:48px;" oninput="calcEndCardioNew()"></div>
           </div>
-          <div class="field-group">
+          <div style="margin-bottom:10px;">
             <label>Resistenza: <span id="ec-bk-res-val" style="color:#60A5FA;font-weight:700;">Livello 8</span></label>
-            <input type="range" id="ec-bk-res" min="1" max="20" value="8" style="width:100%;accent-color:#60A5FA;" oninput="document.getElementById('ec-bk-res-val').textContent='Livello '+this.value;calcEndCardioNew()">
+            <input type="range" id="ec-bk-res" min="1" max="20" value="8" style="width:100%;height:36px;accent-color:#60A5FA;cursor:pointer;" oninput="document.getElementById('ec-bk-res-val').textContent='Livello '+this.value;calcEndCardioNew()">
           </div>
         </div>
-
         <!-- VOGATORE -->
         <div id="ec-panel-ro" style="display:none;">
-          <div class="grid2" style="margin-bottom:8px;">
-            <div class="field-group"><label>Durata (min)</label><input type="number" id="ec-ro-min" value="15" min="1" max="120" inputmode="numeric" oninput="calcEndCardioNew()"></div>
-            <div class="field-group"><label>Distanza (m)</label><input type="number" id="ec-ro-dist" value="3000" min="100" max="50000" step="100" inputmode="numeric" oninput="calcEndCardioNew()"></div>
+          <div class="grid2" style="margin-bottom:10px;">
+            <div><label>Durata (min)</label><input type="number" id="ec-ro-min" value="15" min="1" max="120" inputmode="numeric" style="min-height:48px;" oninput="calcEndCardioNew()"></div>
+            <div><label>Distanza (m)</label><input type="number" id="ec-ro-dist" value="3000" min="100" max="50000" step="100" inputmode="numeric" style="min-height:48px;" oninput="calcEndCardioNew()"></div>
           </div>
-          <div class="field-group"><label>Intensità</label>
-            <select id="ec-ro-int" onchange="calcEndCardioNew()">
+          <div>
+            <label>Intensità</label>
+            <select id="ec-ro-int" onchange="calcEndCardioNew()" style="min-height:48px;">
               <option value="low">Bassa — recupero attivo</option>
               <option value="mid" selected>Media — allenamento</option>
               <option value="high">Alta — interval training</option>
             </select>
           </div>
         </div>
-
-        <!-- risultato -->
-        <div class="cm-result" style="margin-top:10px;">
-          <div><div class="cm-result-val" id="ec-kcal" style="font-size:18px;">—</div><div class="cm-result-lbl">kcal stimate</div></div>
-          <div style="text-align:right;"><div style="font-size:15px;font-weight:700;color:#fff;" id="ec-extra">—</div><div class="cm-result-lbl" id="ec-extra-lbl"></div></div>
+        <!-- risultato calorie -->
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--navy3);border-radius:11px;padding:10px 14px;margin-top:10px;">
+          <div><div style="font-size:22px;font-weight:800;color:#60A5FA;" id="ec-kcal">—</div><div style="font-size:11px;color:var(--text2);">kcal stimate</div></div>
+          <div style="text-align:right;"><div style="font-size:16px;font-weight:700;color:#fff;" id="ec-extra">—</div><div style="font-size:11px;color:var(--text2);" id="ec-extra-lbl"></div></div>
         </div>
       </div>
     </div>
 
-    <!-- OPZIONE CORE -->
-    <div class="session-end-option" id="seo-core">
-      <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="toggleEndOption('core')">
-        <span style="font-size:22px;">⚡</span>
-        <div><div class="seo-title">Aggiungi Core</div><div class="seo-sub">Plank · Crunch · Esercizi addominali</div></div>
-        <div style="margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;" id="seo-core-chk">
-          <div style="width:12px;height:12px;border-radius:50%;background:transparent;" id="seo-core-dot"></div>
+    <!-- OPZIONE CORE — header separato dal form -->
+    <div style="background:var(--card2);border:1px solid var(--border2);border-radius:14px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer;border-radius:14px;" id="seo-core" onclick="toggleEndOption('core')">
+        <span style="font-size:22px;flex-shrink:0;">⚡</span>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;color:#fff;">Aggiungi Core</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:1px;">Plank · Crunch · Esercizi addominali</div>
+        </div>
+        <div style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);background:var(--navy3);display:flex;align-items:center;justify-content:center;flex-shrink:0;" id="seo-core-chk">
+          <svg id="seo-core-dot" viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--text3);display:none;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
         </div>
       </div>
-      <!-- core inline form -->
-      <div id="seo-core-form" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
-        <div id="seo-core-exercises"></div>
-        <button class="btn btn-ghost btn-sm btn-full" style="margin-top:8px;" onclick="addCoreExInEnd()">+ Aggiungi esercizio core</button>
+      <div id="seo-core-form" style="display:none;padding:0 14px 14px;border-top:1px solid var(--border);">
+        <div id="seo-core-exercises" style="margin-top:10px;"></div>
+        <button type="button" class="btn btn-ghost btn-sm btn-full" style="margin-top:10px;min-height:48px;" onclick="addCoreExInEnd()">+ Aggiungi esercizio core</button>
       </div>
     </div>
 
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="closeM('m-endsession');wActive=true;">Annulla</button>
-      <button class="btn btn-primary" style="flex:2;" onclick="confirmEndSession()">Salva tutto ✓</button>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="btn btn-ghost btn-sm" style="flex:1;min-height:48px;" onclick="closeM('m-endsession');wActive=true;">Annulla</button>
+      <button type="button" class="btn btn-primary" style="flex:2;min-height:48px;" onclick="confirmEndSession()">Salva tutto ✓</button>
     </div>
   </div>
 </div>
-
-<!-- MODAL LOG SET CORE (nel modal fine sessione) -->
 
 <!-- MODAL LOG SET -->
 <div class="modal-wrap" id="m-logset">
@@ -1009,12 +1009,12 @@ function openAddExModal(){
   else{
     const g={};fl.forEach(e=>{if(!g[e.muscle])g[e.muscle]=[];g[e.muscle].push(e);});
     sel.innerHTML=Object.entries(g).map(([m,exs])=>
-      `<optgroup label="${m}">${exs.map(e=>`<option value="${e.id}" data-exid="${e.id}">${e.name} — ${e.type}</option>`).join('')}</optgroup>`
+      `<optgroup label="${m}">${exs.map(e=>`<option value="${e.id}" data-exid="${e.id}" data-exname="${e.name}">${e.name} — ${e.type}</option>`).join('')}</optgroup>`
     ).join('');
   }
-  sel.selectedIndex = 0;
-  // forza selezione esplicita primo elemento
-  if(sel.options.length > 0) sel.options[0].selected = true;
+  // Forza sempre il primo option reale selezionato
+  const firstOpt = sel.querySelector('option');
+  if(firstOpt){ firstOpt.selected = true; sel.value = firstOpt.value; }
   document.getElementById('ae-sets').value = 3;
   document.getElementById('ae-reps').value = 10;
   document.getElementById('ae-notes').value = '';
@@ -1164,9 +1164,10 @@ function confirmLogSet(){
 function confirmAddEx(){
   const sel = document.getElementById('ae-sel');
   const selOpt = sel.options[sel.selectedIndex];
-  const id = parseInt(selOpt?.dataset?.exid || selOpt?.value || sel.value, 10);
-  const ex = lib.find(e=>e.id===id);
-  if(!ex){ toast('Esercizio non trovato (id:'+id+') — riprova'); return; }
+  // Usa il nome come chiave primaria — immutabile, non collidibile
+  const exName = selOpt?.dataset?.exname || '';
+  const ex = exName ? lib.find(e=>e.name===exName) : null;
+  if(!ex){ toast('Esercizio non trovato: '+exName+' — riprova'); return; }
   wExs.push({
     id:Date.now(), exId:id, name:ex.name, muscle:ex.muscle, type:ex.type,
     targetSets:+document.getElementById('ae-sets').value||3,
@@ -1823,9 +1824,12 @@ function openEndSessionModal(){
   document.getElementById('es-name').textContent = wName;
   // reset UI
   ['cardio','core'].forEach(t=>{
-    document.getElementById('seo-'+t).classList.remove('selected');
-    document.getElementById('seo-'+t+'-dot').style.background='transparent';
-    document.getElementById('seo-'+t+'-form').style.display='none';
+    const chk=document.getElementById('seo-'+t+'-chk');
+    const dot=document.getElementById('seo-'+t+'-dot');
+    const form=document.getElementById('seo-'+t+'-form');
+    if(chk){chk.style.background='var(--navy3)';chk.style.borderColor='var(--border2)';}
+    if(dot) dot.style.display='none';
+    if(form) form.style.display='none';
   });
   renderEndCoreExercises();
   endMachineType = 'tr';
@@ -1837,23 +1841,30 @@ function openEndSessionModal(){
 function toggleEndOption(type){
   if(type==='cardio'){
     endCardioEnabled = !endCardioEnabled;
-    document.getElementById('seo-cardio').classList.toggle('selected', endCardioEnabled);
-    document.getElementById('seo-cardio-dot').style.background = endCardioEnabled?'#F97316':'transparent';
-    document.getElementById('seo-cardio-form').style.display = endCardioEnabled?'block':'none';
+    const chk = document.getElementById('seo-cardio-chk');
+    const dot = document.getElementById('seo-cardio-dot');
+    const form = document.getElementById('seo-cardio-form');
+    const hdr = document.getElementById('seo-cardio');
+    if(chk) chk.style.background = endCardioEnabled?'#F97316':'var(--navy3)';
+    if(chk) chk.style.borderColor = endCardioEnabled?'#F97316':'var(--border2)';
+    if(dot) dot.style.display = endCardioEnabled?'block':'none';
+    if(dot) dot.style.fill = '#fff';
+    if(form) form.style.display = endCardioEnabled?'block':'none';
+    if(hdr) hdr.style.borderBottom = endCardioEnabled?'1px solid var(--border)':'none';
   } else {
     endCoreEnabled = !endCoreEnabled;
-    document.getElementById('seo-core').classList.toggle('selected', endCoreEnabled);
-    document.getElementById('seo-core-dot').style.background = endCoreEnabled?'#4ADE80':'transparent';
-    document.getElementById('seo-core-form').style.display = endCoreEnabled?'block':'none';
+    const chk = document.getElementById('seo-core-chk');
+    const dot = document.getElementById('seo-core-dot');
+    const form = document.getElementById('seo-core-form');
+    const hdr = document.getElementById('seo-core');
+    if(chk) chk.style.background = endCoreEnabled?'#4ADE80':'var(--navy3)';
+    if(chk) chk.style.borderColor = endCoreEnabled?'#4ADE80':'var(--border2)';
+    if(dot) dot.style.display = endCoreEnabled?'block':'none';
+    if(dot) dot.style.fill = '#fff';
+    if(form) form.style.display = endCoreEnabled?'block':'none';
+    if(hdr) hdr.style.borderBottom = endCoreEnabled?'1px solid var(--border)':'none';
   }
 }
-
-// Impedisce che i click sugli input dentro seo-cardio/seo-core
-// si propaghino alla div padre e richiamino toggleEndOption
-document.addEventListener('click', function(e){
-  const form = e.target.closest('#seo-cardio-form, #seo-core-form');
-  if(form) e.stopPropagation();
-}, true);
 
 
 function addCoreExInEnd(){
@@ -1876,25 +1887,25 @@ function renderEndCoreExercises(){
     return;
   }
   el.innerHTML = endCoreExercises.map((ex,i)=>`
-    <div style="background:var(--navy3);border-radius:12px;padding:10px;margin-bottom:8px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-        <select onchange="updateCoreEx(${i},this.value)" style="flex:1;padding:8px;font-size:13px;">
+    <div style="background:var(--navy3);border-radius:12px;padding:12px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <select onchange="updateCoreEx(${i},this.value)" style="flex:1;padding:10px;font-size:14px;min-height:48px;background:var(--navy2);color:#fff;border:1px solid var(--border2);border-radius:10px;">
           ${coreLib.map(e=>`<option value="${e.id}" ${e.id==ex.exId?'selected':''}>${e.name}</option>`).join('')}
         </select>
-        <button class="btn btn-icon btn-danger btn-sm" onclick="removeCoreEx(${i})">
-          <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#F87171;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        <button type="button" class="btn btn-icon btn-danger" onclick="removeCoreEx(${i})" style="min-width:48px;min-height:48px;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:#F87171;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </div>
       <div class="grid2">
-        <div><label>Serie</label><input type="number" value="${ex.sets}" min="1" max="10" inputmode="numeric" onchange="endCoreExercises[${i}].sets=+this.value"></div>
-        <div><label>Rip / sec</label><input type="number" value="${ex.reps}" min="1" max="300" inputmode="numeric" onchange="endCoreExercises[${i}].reps=+this.value"></div>
+        <div><label>Serie</label><input type="number" value="${ex.sets}" min="1" max="10" inputmode="numeric" style="min-height:48px;" oninput="endCoreExercises[${i}].sets=+this.value"></div>
+        <div><label>Rip / sec</label><input type="number" value="${ex.reps}" min="1" max="300" inputmode="numeric" style="min-height:48px;" oninput="endCoreExercises[${i}].reps=+this.value"></div>
       </div>
     </div>
   `).join('');
 }
 
 function updateCoreEx(i, exId){
-  const ex = lib.find(e=>e.id==exId);
+  const ex = lib.find(e=>e.id==parseInt(exId));
   if(ex){ endCoreExercises[i].exId=ex.id; endCoreExercises[i].name=ex.name; }
 }
 function removeCoreEx(i){ endCoreExercises.splice(i,1); renderEndCoreExercises(); }
