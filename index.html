@@ -311,6 +311,63 @@ textarea{resize:none;min-height:80px;}
       <div class="start-btn" onclick="beginWorkout('LEGS','legs')"><div class="sb-icon">🦵</div><div class="sb-name">LEGS</div><div class="sb-sub">Squat · Stacco · Glutei</div></div>
       <div class="start-btn" onclick="beginWorkout('Libera','all')"><div class="sb-icon">✏️</div><div class="sb-name">Libera</div><div class="sb-sub">Tutti i muscoli</div></div>
     </div>
+
+    <!-- TASTO MULTIFREQUENZA — larghezza piena, sotto la griglia -->
+    <div onclick="toggleMultiChooser()"
+         style="background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(251,191,36,.1));border:1.5px solid var(--orange);border-radius:18px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:10px;-webkit-tap-highlight-color:transparent;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;border-radius:13px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">⚡</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--orange);letter-spacing:-.2px;">Multifrequenza</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">Multi One · Multi Two — 4 giorni/settimana</div>
+        </div>
+      </div>
+      <svg id="multi-chev" viewBox="0 0 24 24" style="width:22px;height:22px;fill:var(--orange);flex-shrink:0;transition:transform .25s;"><path d="M7 10l5 5 5-5z"/></svg>
+    </div>
+
+    <!-- SUB-PANNELLO SCELTA PROGRAMMA — onclick solo sui bottoni interni, no propagazione -->
+    <div id="multi-chooser" style="display:none;margin-bottom:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+
+        <!-- MULTI ONE -->
+        <div style="background:var(--card2);border:1px solid var(--border2);border-radius:16px;overflow:hidden;">
+          <div style="background:rgba(249,115,22,.12);border-bottom:1px solid rgba(249,115,22,.2);padding:12px 14px;">
+            <div style="font-size:15px;font-weight:800;color:var(--orange);">Multi One</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px;">PUSH DAY · 7 esercizi</div>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="font-size:11px;color:var(--text2);line-height:1.8;">
+              Leg Press · Panca Piana<br>Shoulder Press · Leg Ext.<br>Chest Press · French Press<br>Calf Machine
+            </div>
+            <button type="button" onclick="startMulti('one')"
+                    style="width:100%;margin-top:10px;padding:10px;border-radius:11px;border:none;background:var(--orange);color:#fff;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+              Inizia Multi One ▶
+            </button>
+          </div>
+        </div>
+
+        <!-- MULTI TWO -->
+        <div style="background:var(--card2);border:1px solid var(--border2);border-radius:16px;overflow:hidden;">
+          <div style="background:rgba(96,165,250,.12);border-bottom:1px solid rgba(96,165,250,.2);padding:12px 14px;">
+            <div style="font-size:15px;font-weight:800;color:#60A5FA;">Multi Two</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px;">PULL DAY · 7 esercizi</div>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="font-size:11px;color:var(--text2);line-height:1.8;">
+              Lat Machine · Leg Curl<br>Row Machine · Pulley Basso<br>Curl Manubri · Plank<br>Addominali Panca
+            </div>
+            <button type="button" onclick="startMulti('two')"
+                    style="width:100%;margin-top:10px;padding:10px;border-radius:11px;border:none;background:#60A5FA;color:#0A1628;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+              Inizia Multi Two ▶
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px;line-height:1.5;">
+        Cardio Bike 15 min → registrala nella tab Cardio al termine
+      </div>
+    </div>
   </div>
   <div id="pane-active" style="display:none;">
     <div class="workout-header">
@@ -983,6 +1040,11 @@ let lib=[
   {id:19,name:'Leg extension',muscle:'Gambe',type:'Macchina',notes:''},
   {id:17,name:'Plank',muscle:'Core',type:'Corpo libero',notes:''},
   {id:18,name:'Crunch',muscle:'Core',type:'Corpo libero',notes:''},
+  {id:30,name:'Chest Press',muscle:'Petto',type:'Macchina',notes:'Panca orizzontale alla macchina'},
+  {id:31,name:'Calf Machine',muscle:'Polpacci',type:'Macchina',notes:'Sollevamento sulle punte in macchina'},
+  {id:32,name:'Row Machine',muscle:'Schiena',type:'Macchina',notes:'Rematore alla macchina'},
+  {id:33,name:'Pulley Basso',muscle:'Schiena',type:'Cavi',notes:'Rematore ai cavi bassi'},
+  {id:34,name:'Addominali Panca',muscle:'Core',type:'Corpo libero',notes:'Crunch sulla panca inclinata'},
 ];
 let nextId=20, sessions=[], wExs=[], wLog=[], wActive=false, wName='', wType='all', wStart=0, wInterval=null;
 let wKcal=0, wVol=0, wSets=0, hr=0, bw=75, pendEx=null, pendSet=null;
@@ -1051,7 +1113,111 @@ function openAddExModal(){
   openM('m-addex');
 }
 
+
+// ── PROGRAMMI MULTIFREQUENZA ───────────────────────────────────────────
+const MULTI_ONE = [
+  {name:'Leg Press',      muscle:'Gambe',     type:'Macchina',       sets:4, targetReps:9,  note:'4 x 8-10'},
+  {name:'Panca piana',    muscle:'Petto',     type:'Bilanciere',     sets:4, targetReps:7,  note:'4 x 6-8'},
+  {name:'Shoulder press', muscle:'Spalle',    type:'Manubri',        sets:3, targetReps:9,  note:'3 x 8-10'},
+  {name:'Leg Extension',  muscle:'Gambe',     type:'Macchina',       sets:3, targetReps:13, note:'3 x 12-15'},
+  {name:'Chest Press',    muscle:'Petto',     type:'Macchina',       sets:3, targetReps:11, note:'3 x 10-12'},
+  {name:'French press',   muscle:'Tricipiti', type:'Bilanciere',     sets:3, targetReps:10, note:'3 x 10'},
+  {name:'Calf Machine',   muscle:'Polpacci',  type:'Macchina',       sets:4, targetReps:15, note:'4 x 15'},
+];
+
+const MULTI_TWO = [
+  {name:'Lat machine',       muscle:'Schiena',  type:'Cavi',          sets:4, targetReps:9,  note:'4 x 8-10'},
+  {name:'Leg curl',          muscle:'Gambe',    type:'Macchina',      sets:4, targetReps:11, note:'4 x 10-12'},
+  {name:'Row Machine',       muscle:'Schiena',  type:'Macchina',      sets:3, targetReps:9,  note:'3 x 8-10'},
+  {name:'Pulley Basso',      muscle:'Schiena',  type:'Cavi',          sets:3, targetReps:12, note:'3 x 12'},
+  {name:'Curl manubri',      muscle:'Bicipiti', type:'Manubri',       sets:3, targetReps:9,  note:'3 x 8-10'},
+  {name:'Plank',             muscle:'Core',     type:'Corpo libero',  sets:3, targetReps:60, note:'3 x Max'},
+  {name:'Addominali Panca',  muscle:'Core',     type:'Corpo libero',  sets:3, targetReps:25, note:'3 x 25'},
+];
+
+function startMulti(program){
+  // Chiudi il sub-pannello
+  const panel = document.getElementById('multi-chooser');
+  if(panel) panel.style.display='none';
+
+  const programData = program === 'one' ? MULTI_ONE : MULTI_TWO;
+  const programName = program === 'one' ? 'Multi One' : 'Multi Two';
+
+  // Avvia la sessione come "libera" (type='all' per non filtrare)
+  wName = programName;
+  wType = 'all';
+  wStart = Date.now();
+  wActive = true;
+  wExs = []; wLog = []; wKcal = 0; wVol = 0; wSets = 0;
+
+  document.getElementById('pane-start').style.display='none';
+  document.getElementById('pane-active').style.display='block';
+  document.getElementById('w-name').textContent = programName;
+
+  if(wInterval) clearInterval(wInterval);
+  wInterval = setInterval(()=>{
+    const s = Math.floor((Date.now()-wStart)/1000);
+    const mm = String(Math.floor(s/60)).padStart(2,'0');
+    const ss = String(s%60).padStart(2,'0');
+    document.getElementById('w-time').textContent = mm+':'+ss+' in corso';
+    if(hr>0){ wKcal=Math.round(hrMet(hr)*bw*(s/3600)); document.getElementById('mw-kcal').textContent=wKcal; }
+  },1000);
+
+  // Aggiunge automaticamente tutti gli esercizi del programma
+  // Usa il NOME come chiave per evitare collisioni ID (fix bug Dips/Calf)
+  programData.forEach(ex => {
+    const libEx = lib.find(e => e.name === ex.name);
+    if(libEx){
+      wExs.push({
+        id: Date.now() + Math.random(),
+        exId: libEx.id,
+        name: libEx.name,
+        muscle: libEx.muscle,
+        type: libEx.type,
+        targetSets: ex.sets,
+        targetReps: ex.targetReps,
+        notes: ex.note,
+        sets: [],
+        collapsed: false
+      });
+    } else {
+      // Esercizio non in libreria — crea voce temporanea
+      wExs.push({
+        id: Date.now() + Math.random(),
+        exId: 0,
+        name: ex.name,
+        muscle: ex.muscle,
+        type: ex.type,
+        targetSets: ex.sets,
+        targetReps: ex.targetReps,
+        notes: ex.note,
+        sets: [],
+        collapsed: false
+      });
+    }
+  });
+
+  renderExList();
+  pushLog('Inizio: '+programName+' ('+programData.length+' esercizi caricati)');
+  saveToStorage();
+  toast('✓ '+programName+' caricato — '+programData.length+' esercizi pronti', 3000);
+}
+
+function toggleMultiChooser(){
+  const panel = document.getElementById('multi-chooser');
+  const chev  = document.getElementById('multi-chev');
+  if(!panel) return;
+  const isOpen = panel.style.display === 'block';
+  panel.style.display = isOpen ? 'none' : 'block';
+  if(chev) chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
 function beginWorkout(name,type){
+  // chiudi sub-pannello multifrequenza se aperto
+  const mp=document.getElementById('multi-chooser');
+  const mc=document.getElementById('multi-chev');
+  if(mp) mp.style.display='none';
+  if(mc) mc.style.transform='';
   wName=name; wType=type; wStart=Date.now(); wActive=true;
   wExs=[]; wLog=[]; wKcal=0; wVol=0; wSets=0;
   document.getElementById('pane-start').style.display='none';
@@ -1094,6 +1260,11 @@ function _doEndWorkout(cardioEntry, coreEntries){
   pushLog('Fine · '+dur+'min · '+totalKcal+' kcal · '+wVol+' kg vol'+(cardioEntry?' + '+cardioEntry.label:''));
   document.getElementById('pane-active').style.display='none';
   document.getElementById('pane-start').style.display='block';
+  // reset multi-chooser
+  const mpEnd=document.getElementById('multi-chooser');
+  const mcEnd=document.getElementById('multi-chev');
+  if(mpEnd) mpEnd.style.display='none';
+  if(mcEnd) mcEnd.style.transform='';
   renderCardioLog();
   saveToStorage();
   toast('✓ Sessione salvata — '+totalKcal+' kcal · '+wVol+' kg',3000);
