@@ -325,47 +325,81 @@ textarea{resize:none;min-height:80px;}
       <svg id="multi-chev" viewBox="0 0 24 24" style="width:22px;height:22px;fill:var(--orange);flex-shrink:0;transition:transform .25s;"><path d="M7 10l5 5 5-5z"/></svg>
     </div>
 
-    <!-- SUB-PANNELLO SCELTA PROGRAMMA — onclick solo sui bottoni interni, no propagazione -->
+    <!-- SUB-PANNELLO SCELTA PROGRAMMA 4 giorni — griglia 2x2 -->
     <div id="multi-chooser" style="display:none;margin-bottom:12px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
 
-        <!-- MULTI ONE -->
-        <div style="background:var(--card2);border:1px solid var(--border2);border-radius:16px;overflow:hidden;">
-          <div style="background:rgba(249,115,22,.12);border-bottom:1px solid rgba(249,115,22,.2);padding:12px 14px;">
-            <div style="font-size:15px;font-weight:800;color:var(--orange);">Multi One</div>
-            <div style="font-size:10px;color:var(--text3);margin-top:2px;">PUSH DAY · 7 esercizi</div>
+        <!-- MULTI 1 — PUSH -->
+        <div style="background:var(--card2);border:1px solid rgba(249,115,22,.35);border-radius:14px;overflow:hidden;">
+          <div style="background:rgba(249,115,22,.12);border-bottom:1px solid rgba(249,115,22,.2);padding:10px 12px;">
+            <div style="font-size:13px;font-weight:800;color:var(--orange);">Multi 1</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:1px;">PUSH · Carichi pesanti</div>
           </div>
-          <div style="padding:10px 12px;">
-            <div style="font-size:11px;color:var(--text2);line-height:1.8;">
-              Leg Press · Panca Piana<br>Shoulder Press · Leg Ext.<br>Chest Press · French Press<br>Calf Machine
+          <div style="padding:9px 11px;">
+            <div style="font-size:10px;color:var(--text2);line-height:1.75;">
+              Leg Press · Panca Piana<br>Shoulder Press · Leg Ext.<br>Panca Inclinata<br>Tricipiti Macchina · Calf
             </div>
             <button type="button" onclick="startMulti('one')"
-                    style="width:100%;margin-top:10px;padding:10px;border-radius:11px;border:none;background:var(--orange);color:#fff;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
-              Inizia Multi One ▶
+              style="width:100%;margin-top:9px;padding:9px;border-radius:10px;border:none;background:var(--orange);color:#fff;font-size:12px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+              Inizia ▶
             </button>
           </div>
         </div>
 
-        <!-- MULTI TWO -->
-        <div style="background:var(--card2);border:1px solid var(--border2);border-radius:16px;overflow:hidden;">
-          <div style="background:rgba(96,165,250,.12);border-bottom:1px solid rgba(96,165,250,.2);padding:12px 14px;">
-            <div style="font-size:15px;font-weight:800;color:#60A5FA;">Multi Two</div>
-            <div style="font-size:10px;color:var(--text3);margin-top:2px;">PULL DAY · 7 esercizi</div>
+        <!-- MULTI 2 — PULL -->
+        <div style="background:var(--card2);border:1px solid rgba(96,165,250,.35);border-radius:14px;overflow:hidden;">
+          <div style="background:rgba(96,165,250,.12);border-bottom:1px solid rgba(96,165,250,.2);padding:10px 12px;">
+            <div style="font-size:13px;font-weight:800;color:#60A5FA;">Multi 2</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:1px;">PULL · Schiena e Bicipiti</div>
           </div>
-          <div style="padding:10px 12px;">
-            <div style="font-size:11px;color:var(--text2);line-height:1.8;">
-              Lat Machine · Leg Curl<br>Row Machine · Pulley Basso<br>Curl Manubri · Plank<br>Addominali Panca
+          <div style="padding:9px 11px;">
+            <div style="font-size:10px;color:var(--text2);line-height:1.75;">
+              Lat Machine · Leg Curl<br>Row Machine · Pulley Basso<br>Curl Manubri<br>Plank · Add. Panca
             </div>
             <button type="button" onclick="startMulti('two')"
-                    style="width:100%;margin-top:10px;padding:10px;border-radius:11px;border:none;background:#60A5FA;color:#0A1628;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
-              Inizia Multi Two ▶
+              style="width:100%;margin-top:9px;padding:9px;border-radius:10px;border:none;background:#60A5FA;color:#0A1628;font-size:12px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+              Inizia ▶
+            </button>
+          </div>
+        </div>
+
+        <!-- MULTI 3 — PUSH 2 -->
+        <div style="background:var(--card2);border:1px solid rgba(251,191,36,.35);border-radius:14px;overflow:hidden;">
+          <div style="background:rgba(251,191,36,.12);border-bottom:1px solid rgba(251,191,36,.2);padding:10px 12px;">
+            <div style="font-size:13px;font-weight:800;color:#FBBF24;">Multi 3</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:1px;">PUSH · Esplosività</div>
+          </div>
+          <div style="padding:9px 11px;">
+            <div style="font-size:10px;color:var(--text2);line-height:1.75;">
+              Leg Press · Panca Piana<br>Dips · Leg Extension<br>Alzate Laterali<br>Tric. Presa Inv. · Calf
+            </div>
+            <button type="button" onclick="startMulti('three')"
+              style="width:100%;margin-top:9px;padding:9px;border-radius:10px;border:none;background:#FBBF24;color:#0A1628;font-size:12px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+              Inizia ▶
+            </button>
+          </div>
+        </div>
+
+        <!-- MULTI 4 — PULL 2 -->
+        <div style="background:var(--card2);border:1px solid rgba(74,222,128,.35);border-radius:14px;overflow:hidden;">
+          <div style="background:rgba(74,222,128,.12);border-bottom:1px solid rgba(74,222,128,.2);padding:10px 12px;">
+            <div style="font-size:13px;font-weight:800;color:#4ADE80;">Multi 4</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:1px;">PULL · Spessore e Braccia</div>
+          </div>
+          <div style="padding:9px 11px;">
+            <div style="font-size:10px;color:var(--text2);line-height:1.75;">
+              Lat Machine · Leg Curl<br>Row Machine · Rem. Manubrio<br>Hammer Curl<br>Plank · Add. Panca
+            </div>
+            <button type="button" onclick="startMulti('four')"
+              style="width:100%;margin-top:9px;padding:9px;border-radius:10px;border:none;background:#4ADE80;color:#0A1628;font-size:12px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+              Inizia ▶
             </button>
           </div>
         </div>
 
       </div>
       <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px;line-height:1.5;">
-        Cardio Bike 15 min → registrala nella tab Cardio al termine
+        🚴 Bike al termine → registrala nella tab Cardio
       </div>
     </div>
   </div>
@@ -1045,6 +1079,11 @@ let lib=[
   {id:32,name:'Row Machine',muscle:'Schiena',type:'Macchina',notes:'Rematore alla macchina'},
   {id:33,name:'Pulley Basso',muscle:'Schiena',type:'Cavi',notes:'Rematore ai cavi bassi'},
   {id:34,name:'Addominali Panca',muscle:'Core',type:'Corpo libero',notes:'Crunch sulla panca inclinata'},
+  {id:35,name:'Dips',muscle:'Tricipiti',type:'Corpo libero',notes:'Parallele — se superi 12 rip aggiungi sovraccarico'},
+  {id:36,name:'Tricipiti alla macchina',muscle:'Tricipiti',type:'Macchina',notes:'Estensione tricipiti alla macchina'},
+  {id:37,name:'Tricipiti presa inversa',muscle:'Tricipiti',type:'Cavi',notes:'Push-down presa supina ai cavi'},
+  {id:38,name:'Rematore manubrio singolo',muscle:'Schiena',type:'Manubri',notes:'Rematore unilaterale con manubrio, 10 rip per lato'},
+  {id:39,name:'Hammer curl',muscle:'Bicipiti',type:'Manubri',notes:'Curl a martello con manubri'},
 ];
 let nextId=20, sessions=[], wExs=[], wLog=[], wActive=false, wName='', wType='all', wStart=0, wInterval=null;
 let wKcal=0, wVol=0, wSets=0, hr=0, bw=75, pendEx=null, pendSet=null;
@@ -1116,32 +1155,60 @@ function openAddExModal(){
 
 // ── PROGRAMMI MULTIFREQUENZA ───────────────────────────────────────────
 const MULTI_ONE = [
-  {name:'Leg Press',      muscle:'Gambe',     type:'Macchina',       sets:4, targetReps:9,  note:'4 x 8-10'},
-  {name:'Panca piana',    muscle:'Petto',     type:'Bilanciere',     sets:4, targetReps:7,  note:'4 x 6-8'},
-  {name:'Shoulder press', muscle:'Spalle',    type:'Manubri',        sets:3, targetReps:9,  note:'3 x 8-10'},
-  {name:'Leg Extension',  muscle:'Gambe',     type:'Macchina',       sets:3, targetReps:13, note:'3 x 12-15'},
-  {name:'Chest Press',    muscle:'Petto',     type:'Macchina',       sets:3, targetReps:11, note:'3 x 10-12'},
-  {name:'French press',   muscle:'Tricipiti', type:'Bilanciere',     sets:3, targetReps:10, note:'3 x 10'},
-  {name:'Calf Machine',   muscle:'Polpacci',  type:'Macchina',       sets:4, targetReps:15, note:'4 x 15'},
+  {name:'Leg press',              muscle:'Gambe',     type:'Macchina',      sets:4, targetReps:9,  note:'4 x 8-10'},
+  {name:'Panca piana',            muscle:'Petto',     type:'Bilanciere',    sets:4, targetReps:7,  note:'4 x 6-8'},
+  {name:'Shoulder press',         muscle:'Spalle',    type:'Manubri',       sets:3, targetReps:9,  note:'3 x 8-10'},
+  {name:'Leg extension',          muscle:'Gambe',     type:'Macchina',      sets:3, targetReps:12, note:'3 x 12'},
+  {name:'Panca inclinata',        muscle:'Petto',     type:'Bilanciere',    sets:3, targetReps:11, note:'3 x 10-12'},
+  {name:'Tricipiti alla macchina',muscle:'Tricipiti', type:'Macchina',      sets:3, targetReps:12, note:'3 x 12'},
+  {name:'Calf Machine',           muscle:'Polpacci',  type:'Macchina',      sets:4, targetReps:15, note:'4 x 15'},
 ];
 
 const MULTI_TWO = [
-  {name:'Lat machine',       muscle:'Schiena',  type:'Cavi',          sets:4, targetReps:9,  note:'4 x 8-10'},
-  {name:'Leg curl',          muscle:'Gambe',    type:'Macchina',      sets:4, targetReps:11, note:'4 x 10-12'},
-  {name:'Row Machine',       muscle:'Schiena',  type:'Macchina',      sets:3, targetReps:9,  note:'3 x 8-10'},
-  {name:'Pulley Basso',      muscle:'Schiena',  type:'Cavi',          sets:3, targetReps:12, note:'3 x 12'},
-  {name:'Curl manubri',      muscle:'Bicipiti', type:'Manubri',       sets:3, targetReps:9,  note:'3 x 8-10'},
-  {name:'Plank',             muscle:'Core',     type:'Corpo libero',  sets:3, targetReps:60, note:'3 x Max'},
-  {name:'Addominali Panca',  muscle:'Core',     type:'Corpo libero',  sets:3, targetReps:25, note:'3 x 25'},
+  {name:'Lat machine',            muscle:'Schiena',  type:'Cavi',          sets:4, targetReps:9,  note:'4 x 8-10'},
+  {name:'Leg curl',               muscle:'Gambe',    type:'Macchina',      sets:4, targetReps:11, note:'4 x 10-12'},
+  {name:'Row Machine',            muscle:'Schiena',  type:'Macchina',      sets:3, targetReps:9,  note:'3 x 8-10'},
+  {name:'Pulley Basso',           muscle:'Schiena',  type:'Cavi',          sets:3, targetReps:12, note:'3 x 12'},
+  {name:'Curl manubri',           muscle:'Bicipiti', type:'Manubri',       sets:3, targetReps:9,  note:'3 x 8-10'},
+  {name:'Plank',                  muscle:'Core',     type:'Corpo libero',  sets:3, targetReps:60, note:'3 x 3 min'},
+  {name:'Addominali Panca',       muscle:'Core',     type:'Corpo libero',  sets:3, targetReps:25, note:'3 x 25'},
+];
+
+const MULTI_THREE = [
+  {name:'Leg press',              muscle:'Gambe',     type:'Macchina',      sets:4, targetReps:11, note:'4 x 10-12 — esecuzione lenta'},
+  {name:'Panca piana',            muscle:'Petto',     type:'Bilanciere',    sets:4, targetReps:9,  note:'4 x 8-10'},
+  {name:'Dips',                   muscle:'Tricipiti', type:'Corpo libero',  sets:3, targetReps:12, note:'3 x Max — sovraccarico se >12'},
+  {name:'Leg extension',          muscle:'Gambe',     type:'Macchina',      sets:3, targetReps:15, note:'3 x 15'},
+  {name:'Alzate laterali',        muscle:'Spalle',    type:'Manubri',       sets:3, targetReps:13, note:'3 x 12-15'},
+  {name:'Tricipiti presa inversa',muscle:'Tricipiti', type:'Cavi',          sets:3, targetReps:12, note:'3 x 12'},
+  {name:'Calf Machine',           muscle:'Polpacci',  type:'Macchina',      sets:4, targetReps:15, note:'4 x 15'},
+];
+
+const MULTI_FOUR = [
+  {name:'Lat machine',                 muscle:'Schiena',  type:'Cavi',          sets:4, targetReps:11, note:'4 x 10-12 — focus contrazione'},
+  {name:'Leg curl',                    muscle:'Gambe',    type:'Macchina',      sets:4, targetReps:12, note:'4 x 12'},
+  {name:'Row Machine',                 muscle:'Schiena',  type:'Macchina',      sets:3, targetReps:10, note:'3 x 10'},
+  {name:'Rematore manubrio singolo',   muscle:'Schiena',  type:'Manubri',       sets:3, targetReps:10, note:'3 x 10 per lato'},
+  {name:'Hammer curl',                 muscle:'Bicipiti', type:'Manubri',       sets:3, targetReps:10, note:'3 x 10'},
+  {name:'Plank',                       muscle:'Core',     type:'Corpo libero',  sets:3, targetReps:60, note:'3 x Max'},
+  {name:'Addominali Panca',            muscle:'Core',     type:'Corpo libero',  sets:3, targetReps:30, note:'3 x 30'},
 ];
 
 function startMulti(program){
   // Chiudi il sub-pannello
   const panel = document.getElementById('multi-chooser');
+  const chev  = document.getElementById('multi-chev');
   if(panel) panel.style.display='none';
+  if(chev)  chev.style.transform='';
 
-  const programData = program === 'one' ? MULTI_ONE : MULTI_TWO;
-  const programName = program === 'one' ? 'Multi One' : 'Multi Two';
+  const programMap = {
+    one:   {data: MULTI_ONE,   name: 'Multi 1 — Push'},
+    two:   {data: MULTI_TWO,   name: 'Multi 2 — Pull'},
+    three: {data: MULTI_THREE, name: 'Multi 3 — Push'},
+    four:  {data: MULTI_FOUR,  name: 'Multi 4 — Pull'},
+  };
+  const programData = programMap[program].data;
+  const programName = programMap[program].name;
 
   // Avvia la sessione come "libera" (type='all' per non filtrare)
   wName = programName;
@@ -1709,10 +1776,23 @@ function doExport(){
       }
       out+='\n---\n\n';
     });
+    // Aggiungi sezione cardio al Markdown per ogni sessione
+    src.forEach(s=>{
+      const sDate = s.date;
+      const cardioDay = cardioSessions.filter(cs=>cs.date===sDate);
+      if(cardioDay.length){
+        out += '### Cardio\n\n';
+        out += '| Attivita\' | Durata (min) | Kcal | Dettaglio |\n|---|---|---|---|\n';
+        cardioDay.forEach(cs=>{
+          out += '| '+cs.label.split(' ')[0]+' | '+(cs.min||'—')+' | '+cs.kcal+' | '+cs.label+' |\n';
+        });
+        out += '\n';
+      }
+    });
     expData=out;
   } else {
-    // CSV dettagliato
-    const hdr=['Data','Allenamento','Durata(min)','Kcal','Volume totale(kg)','Serie totali','FC(bpm)','Esercizio','Muscolo','Tipo','N.Serie','Peso(kg)','Ripetizioni','RIR','Vol.Serie(kg)'];
+    // CSV dettagliato — include cardio del giorno come righe extra
+    const hdr=['Data','Allenamento','Durata(min)','Kcal','Volume totale(kg)','Serie totali','FC(bpm)','Esercizio','Muscolo','Tipo','N.Serie','Peso(kg)','Ripetizioni','RIR','Vol.Serie(kg)','Cardio','Cardio Kcal','Cardio Dettaglio'];
     const rows=[];
     src.forEach(s=>{
       if(!s.exercises||!s.exercises.length){
@@ -1729,6 +1809,15 @@ function doExport(){
           }
         });
       }
+    });
+    // aggiungi righe cardio per le date delle sessioni
+    src.forEach(s=>{
+      const cardioDay = cardioSessions.filter(cs=>cs.date===s.date);
+      cardioDay.forEach(cs=>{
+        rows.push([s.date, s.name, cs.min||'', cs.kcal, '', '', '',
+                   'CARDIO — '+cs.label.split(' ')[0], '', '', '', '', '', '', '',
+                   cs.label, cs.kcal, '']);
+      });
     });
     expData=[hdr.join(sep),...rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(sep))].join('\n');
   }
