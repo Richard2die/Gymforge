@@ -7,8 +7,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0A1628">
-<link rel="manifest" id="manifest-link">
-<title>GymForge</title>
+<meta name="application-name" content="GymBro">
+<meta name="apple-mobile-web-app-title" content="GymBro">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<title>GymBro</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
@@ -251,7 +256,7 @@ textarea{resize:none;min-height:80px;}
 <div class="topbar">
   <div class="logo">
     <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg></div>
-    <span class="logo-text">Gym<span>Forge</span></span>
+    <span class="logo-text">Gym<span>Bro</span></span>
   </div>
   <div class="hr-chip" onclick="goTab('fc',document.getElementById('nb-fc'))">
     <div class="hr-dot"></div>
@@ -965,28 +970,14 @@ textarea{resize:none;min-height:80px;}
 
 <script>
 // ── MANIFEST PWA (inline blob) ──────────────────────────────
-const manifestData = {
-  name:"GymForge",short_name:"GymForge",
-  description:"Il tuo tracker di allenamento personale",
-  start_url:".",display:"standalone",
-  background_color:"#0A1628",theme_color:"#0A1628",
-  orientation:"portrait",
-  icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230A1628'/%3E%3Crect width='192' height='192' rx='40' fill='%23F97316' opacity='.15'/%3E%3Cpath d='M136 75.4l-8.5-8.5-22.3 22.3L82.8 67l-8.5 8.5 22.3 22.3-22.3 22.3 8.5 8.5 22.3-22.3 22.3 22.3 8.5-8.5-22.3-22.3z' fill='%23F97316'/%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"},{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230A1628'/%3E%3Cpath d='M360 202l-22-22-59 59-59-59-22 22 59 59-59 59 22 22 59-59 59 59 22-22-59-59z' fill='%23F97316'/%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]
-};
-const blob=new Blob([JSON.stringify(manifestData)],{type:'application/json'});
-document.getElementById('manifest-link').href=URL.createObjectURL(blob);
+// Manifest esterno — vedi manifest.json nella repository
+// Il link è già nell'<head>
 
 // ── SERVICE WORKER inline ──────────────────────────────────
 if('serviceWorker' in navigator){
-  const swCode=`
-const CACHE='gymforge-v1';
-const ASSETS=['/'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
-self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
-`;
-  const swBlob=new Blob([swCode],{type:'application/javascript'});
-  const swUrl=URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swUrl).catch(()=>{});
+  navigator.serviceWorker.register('/Gymforge/sw.js')
+    .then(reg => console.log('SW registrato:', reg.scope))
+    .catch(err => console.log('SW errore:', err));
 }
 
 // ── AUDIO (Web Audio API) ──────────────────────────────────
