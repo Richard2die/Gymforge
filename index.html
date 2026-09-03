@@ -7,13 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0A1628">
-<meta name="application-name" content="GymBro">
-<meta name="apple-mobile-web-app-title" content="GymBro">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-<title>GymBro</title>
+<link rel="manifest" id="manifest-link">
+<title>GymForge</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
@@ -256,7 +251,7 @@ textarea{resize:none;min-height:80px;}
 <div class="topbar">
   <div class="logo">
     <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg></div>
-    <span class="logo-text">Gym<span>Bro</span></span>
+    <span class="logo-text">Gym<span>Forge</span></span>
   </div>
   <div class="hr-chip" onclick="goTab('fc',document.getElementById('nb-fc'))">
     <div class="hr-dot"></div>
@@ -407,6 +402,186 @@ textarea{resize:none;min-height:80px;}
         🚴 Bike al termine → registrala nella tab Cardio
       </div>
     </div>
+
+    <!-- ═══ BANNER CINDY ═══ -->
+    <div onclick="toggleCindyPanel()"
+         style="background:linear-gradient(135deg,rgba(96,165,250,.15),rgba(74,222,128,.1));border:1.5px solid #60A5FA;border-radius:18px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:10px;-webkit-tap-highlight-color:transparent;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;border-radius:13px;background:#60A5FA;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🔄</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:#60A5FA;letter-spacing:-.2px;">Protocollo Cindy</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">20 min AMRAP · 5 Pull-up · 10 Push-up · 15 Squat</div>
+        </div>
+      </div>
+      <svg id="cindy-chev" viewBox="0 0 24 24" style="width:22px;height:22px;fill:#60A5FA;flex-shrink:0;transition:transform .25s;"><path d="M7 10l5 5 5-5z"/></svg>
+    </div>
+
+    <!-- ═══ PANNELLO CINDY ═══ -->
+    <div id="cindy-panel" style="display:none;margin-bottom:12px;">
+
+      <!-- Stato: SETUP -->
+      <div id="cindy-setup">
+        <div style="background:var(--card2);border:1px solid var(--border2);border-radius:16px;padding:16px;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:700;color:#60A5FA;margin-bottom:12px;">Scegli modalità</div>
+
+          <!-- Modalità tracciamento -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+            <button type="button" id="cindy-btn-rounds" onclick="setCindyMode('rounds')"
+              style="padding:10px;border-radius:11px;border:1.5px solid #60A5FA;background:rgba(96,165,250,.15);color:#60A5FA;font-size:12px;font-weight:700;cursor:pointer;min-height:52px;font-family:inherit;line-height:1.4;">
+              🔄 Round completi<br><span style="font-size:10px;font-weight:400;color:var(--text3);">Tap unico a giro</span>
+            </button>
+            <button type="button" id="cindy-btn-exs" onclick="setCindyMode('exercises')"
+              style="padding:10px;border-radius:11px;border:1.5px solid var(--border2);background:var(--navy3);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;min-height:52px;font-family:inherit;line-height:1.4;">
+              📊 Traccia esercizi<br><span style="font-size:10px;font-weight:400;color:var(--text3);">Pull-up / Push-up / Squat</span>
+            </button>
+          </div>
+
+          <!-- Durata -->
+          <div style="margin-bottom:14px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;">Durata</div>
+            <div style="display:flex;gap:8px;">
+              <button type="button" id="cindy-dur-20" onclick="setCindyDuration(20)"
+                style="flex:1;padding:10px;border-radius:11px;border:1.5px solid #60A5FA;background:rgba(96,165,250,.15);color:#60A5FA;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+                20 min
+              </button>
+              <button type="button" id="cindy-dur-custom" onclick="setCindyDuration(0)"
+                style="flex:1;padding:10px;border-radius:11px;border:1.5px solid var(--border2);background:var(--navy3);color:var(--text2);font-size:13px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+                Custom
+              </button>
+            </div>
+            <div id="cindy-custom-wrap" style="display:none;margin-top:10px;">
+              <input type="number" id="cindy-custom-min" placeholder="Minuti (es. 15)"
+                inputmode="numeric" min="1" max="60"
+                style="width:100%;min-height:48px;box-sizing:border-box;border-radius:11px;border:1px solid var(--border2);background:var(--navy3);color:#fff;font-size:16px;padding:0 14px;font-family:inherit;">
+            </div>
+          </div>
+
+          <button type="button" onclick="startCindy()"
+            style="width:100%;padding:14px;border-radius:13px;border:none;background:#60A5FA;color:#0A1628;font-size:15px;font-weight:800;cursor:pointer;min-height:52px;font-family:inherit;letter-spacing:-.2px;">
+            Inizia Cindy ▶
+          </button>
+        </div>
+      </div>
+
+      <!-- Stato: RUNNING — round completi -->
+      <div id="cindy-running-rounds" style="display:none;">
+        <div style="background:var(--card2);border:1px solid #60A5FA;border-radius:16px;padding:16px;text-align:center;">
+          <!-- Timer -->
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;letter-spacing:.5px;">TEMPO RIMANENTE</div>
+          <div id="cindy-timer-r" style="font-size:56px;font-weight:900;color:#60A5FA;letter-spacing:-2px;line-height:1;margin-bottom:16px;">20:00</div>
+          <!-- Round counter -->
+          <div style="font-size:13px;color:var(--text2);margin-bottom:10px;">Round completati</div>
+          <div id="cindy-rounds-count" style="font-size:72px;font-weight:900;color:#fff;line-height:1;margin-bottom:20px;">0</div>
+          <!-- Tap button -->
+          <button type="button" onclick="addCindyRound()"
+            style="width:100%;padding:20px;border-radius:16px;border:none;background:#60A5FA;color:#0A1628;font-size:18px;font-weight:800;cursor:pointer;min-height:72px;font-family:inherit;margin-bottom:12px;-webkit-tap-highlight-color:transparent;">
+            ✓ Round completato
+          </button>
+          <button type="button" onclick="stopCindy()"
+            style="width:100%;padding:12px;border-radius:11px;border:1.5px solid #F87171;background:transparent;color:#F87171;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+            Interrompi
+          </button>
+        </div>
+      </div>
+
+      <!-- Stato: RUNNING — traccia esercizi -->
+      <div id="cindy-running-exs" style="display:none;">
+        <div style="background:var(--card2);border:1px solid #60A5FA;border-radius:16px;padding:16px;">
+          <!-- Timer -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <div>
+              <div style="font-size:10px;color:var(--text3);letter-spacing:.5px;">TEMPO</div>
+              <div id="cindy-timer-e" style="font-size:36px;font-weight:900;color:#60A5FA;line-height:1;">20:00</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:10px;color:var(--text3);">ROUND</div>
+              <div id="cindy-round-e" style="font-size:36px;font-weight:900;color:#fff;line-height:1;">0</div>
+            </div>
+          </div>
+
+          <!-- Esercizio corrente -->
+          <div style="background:var(--navy3);border-radius:12px;padding:12px;margin-bottom:12px;text-align:center;">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">ESERCIZIO CORRENTE</div>
+            <div id="cindy-ex-name" style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Pull-up</div>
+            <div id="cindy-ex-progress" style="font-size:13px;color:#60A5FA;font-weight:700;">0 / 5</div>
+          </div>
+
+          <!-- Tasti esercizi -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div style="text-align:center;">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px;">PULL-UP</div>
+              <div id="cindy-cnt-pu" style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;">0</div>
+              <button type="button" onclick="addCindyEx('pullup')"
+                style="width:100%;padding:12px 0;border-radius:11px;border:none;background:rgba(96,165,250,.2);color:#60A5FA;font-size:20px;cursor:pointer;min-height:52px;font-family:inherit;">
+                +
+              </button>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px;">PUSH-UP</div>
+              <div id="cindy-cnt-push" style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;">0</div>
+              <button type="button" onclick="addCindyEx('pushup')"
+                style="width:100%;padding:12px 0;border-radius:11px;border:none;background:rgba(74,222,128,.2);color:#4ADE80;font-size:20px;cursor:pointer;min-height:52px;font-family:inherit;">
+                +
+              </button>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px;">SQUAT</div>
+              <div id="cindy-cnt-sq" style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;">0</div>
+              <button type="button" onclick="addCindyEx('squat')"
+                style="width:100%;padding:12px 0;border-radius:11px;border:none;background:rgba(251,191,36,.2);color:#FBBF24;font-size:20px;cursor:pointer;min-height:52px;font-family:inherit;">
+                +
+              </button>
+            </div>
+          </div>
+
+          <!-- Progressione round -->
+          <div style="background:var(--navy3);border-radius:10px;padding:10px;margin-bottom:12px;">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:6px;">ROUND CORRENTE</div>
+            <div style="display:flex;gap:4px;">
+              <div style="flex:1;background:var(--navy2);border-radius:6px;overflow:hidden;height:8px;">
+                <div id="cindy-bar-pu" style="height:100%;background:#60A5FA;width:0%;transition:width .2s;"></div>
+              </div>
+              <div style="flex:1;background:var(--navy2);border-radius:6px;overflow:hidden;height:8px;">
+                <div id="cindy-bar-push" style="height:100%;background:#4ADE80;width:0%;transition:width .2s;"></div>
+              </div>
+              <div style="flex:1;background:var(--navy2);border-radius:6px;overflow:hidden;height:8px;">
+                <div id="cindy-bar-sq" style="height:100%;background:#FBBF24;width:0%;transition:width .2s;"></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:3px;">
+              <span>Pull 0/5</span><span>Push 0/10</span><span>Squat 0/15</span>
+            </div>
+          </div>
+
+          <button type="button" onclick="stopCindy()"
+            style="width:100%;padding:12px;border-radius:11px;border:1.5px solid #F87171;background:transparent;color:#F87171;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;font-family:inherit;">
+            Interrompi
+          </button>
+        </div>
+      </div>
+
+      <!-- Stato: RISULTATI -->
+      <div id="cindy-results" style="display:none;">
+        <div style="background:var(--card2);border:1px solid #4ADE80;border-radius:16px;padding:16px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">🏆</div>
+          <div style="font-size:20px;font-weight:800;color:#4ADE80;margin-bottom:4px;">Cindy completata!</div>
+          <div id="cindy-res-rounds" style="font-size:48px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px;">0</div>
+          <div style="font-size:13px;color:var(--text3);margin-bottom:16px;">round in <span id="cindy-res-time">20:00</span></div>
+          <div id="cindy-res-detail" style="background:var(--navy3);border-radius:11px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.8;text-align:left;"></div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" onclick="saveCindy(false)"
+              style="flex:1;padding:12px;border-radius:11px;border:1.5px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;min-height:48px;font-family:inherit;">
+              Salva e chiudi
+            </button>
+            <button type="button" onclick="saveCindy(true)"
+              style="flex:2;padding:12px;border-radius:11px;border:none;background:#4ADE80;color:#0A1628;font-size:13px;font-weight:700;cursor:pointer;min-height:48px;font-family:inherit;">
+              Salva + sessione libera ▶
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cindy-panel -->
   </div>
   <div id="pane-active" style="display:none;">
     <div class="workout-header">
@@ -970,14 +1145,28 @@ textarea{resize:none;min-height:80px;}
 
 <script>
 // ── MANIFEST PWA (inline blob) ──────────────────────────────
-// Manifest esterno — vedi manifest.json nella repository
-// Il link è già nell'<head>
+const manifestData = {
+  name:"GymForge",short_name:"GymForge",
+  description:"Il tuo tracker di allenamento personale",
+  start_url:".",display:"standalone",
+  background_color:"#0A1628",theme_color:"#0A1628",
+  orientation:"portrait",
+  icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230A1628'/%3E%3Crect width='192' height='192' rx='40' fill='%23F97316' opacity='.15'/%3E%3Cpath d='M136 75.4l-8.5-8.5-22.3 22.3L82.8 67l-8.5 8.5 22.3 22.3-22.3 22.3 8.5 8.5 22.3-22.3 22.3 22.3 8.5-8.5-22.3-22.3z' fill='%23F97316'/%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"},{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230A1628'/%3E%3Cpath d='M360 202l-22-22-59 59-59-59-22 22 59 59-59 59 22 22 59-59 59 59 22-22-59-59z' fill='%23F97316'/%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]
+};
+const blob=new Blob([JSON.stringify(manifestData)],{type:'application/json'});
+document.getElementById('manifest-link').href=URL.createObjectURL(blob);
 
 // ── SERVICE WORKER inline ──────────────────────────────────
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/Gymforge/sw.js')
-    .then(reg => console.log('SW registrato:', reg.scope))
-    .catch(err => console.log('SW errore:', err));
+  const swCode=`
+const CACHE='gymforge-v1';
+const ASSETS=['/'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
+self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+`;
+  const swBlob=new Blob([swCode],{type:'application/javascript'});
+  const swUrl=URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swUrl).catch(()=>{});
 }
 
 // ── AUDIO (Web Audio API) ──────────────────────────────────
@@ -1259,6 +1448,329 @@ function startMulti(program){
   pushLog('Inizio: '+programName+' ('+programData.length+' esercizi caricati)');
   saveToStorage();
   toast('✓ '+programName+' caricato — '+programData.length+' esercizi pronti', 3000);
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// PROTOCOLLO CINDY
+// ══════════════════════════════════════════════════════════════
+let cindyMode      = 'rounds';   // 'rounds' | 'exercises'
+let cindyDuration  = 20;         // minuti
+let cindyInterval  = null;       // setInterval handle
+let cindySecsLeft  = 0;          // secondi rimanenti
+let cindyRunning   = false;
+let cindyRounds    = 0;
+let cindyStartTime = null;
+
+// Contatori esercizi nel round corrente e totali
+let cindyExCur  = {pullup:0, pushup:0, squat:0};  // round corrente
+let cindyExTot  = {pullup:0, pushup:0, squat:0};  // totale sessione
+// Soglie per completare un round
+const CINDY_TARGETS = {pullup:5, pushup:10, squat:15};
+// Ordine esercizi nel round
+const CINDY_ORDER   = ['pullup','pushup','squat'];
+const CINDY_LABELS  = {pullup:'Pull-up', pushup:'Push-up', squat:'Squat'};
+let cindyExIdx = 0;  // indice esercizio corrente nel round (modalità traccia)
+
+// ── TOGGLE PANNELLO ───────────────────────────────────────────
+function toggleCindyPanel(){
+  const panel = document.getElementById('cindy-panel');
+  const chev  = document.getElementById('cindy-chev');
+  if(!panel) return;
+  const open = panel.style.display === 'block';
+  panel.style.display = open ? 'none' : 'block';
+  if(chev) chev.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+// ── SETUP: modalità e durata ──────────────────────────────────
+function setCindyMode(mode){
+  cindyMode = mode;
+  ['rounds','exs'].forEach(m => {
+    const btn = document.getElementById('cindy-btn-'+m);
+    if(!btn) return;
+    const active = (m === 'rounds' && mode === 'rounds') ||
+                   (m === 'exs'    && mode === 'exercises');
+    btn.style.borderColor  = active ? '#60A5FA' : 'var(--border2)';
+    btn.style.background   = active ? 'rgba(96,165,250,.15)' : 'var(--navy3)';
+    btn.style.color        = active ? '#60A5FA' : 'var(--text2)';
+  });
+}
+
+function setCindyDuration(min){
+  cindyDuration = min;
+  const customWrap = document.getElementById('cindy-custom-wrap');
+  // stile bottoni durata
+  const btn20  = document.getElementById('cindy-dur-20');
+  const btnCus = document.getElementById('cindy-dur-custom');
+  const isCustom = min === 0;
+  if(btn20){
+    btn20.style.borderColor = isCustom ? 'var(--border2)' : '#60A5FA';
+    btn20.style.background  = isCustom ? 'var(--navy3)' : 'rgba(96,165,250,.15)';
+    btn20.style.color       = isCustom ? 'var(--text2)' : '#60A5FA';
+  }
+  if(btnCus){
+    btnCus.style.borderColor = isCustom ? '#60A5FA' : 'var(--border2)';
+    btnCus.style.background  = isCustom ? 'rgba(96,165,250,.15)' : 'var(--navy3)';
+    btnCus.style.color       = isCustom ? '#60A5FA' : 'var(--text2)';
+  }
+  if(customWrap) customWrap.style.display = isCustom ? 'block' : 'none';
+}
+
+// ── AVVIO ─────────────────────────────────────────────────────
+function startCindy(){
+  // Leggi durata
+  let mins = cindyDuration;
+  if(mins === 0){
+    mins = parseInt(document.getElementById('cindy-custom-min').value)||0;
+    if(mins < 1 || mins > 60){
+      toast('Inserisci una durata tra 1 e 60 minuti'); return;
+    }
+  }
+  cindySecsLeft  = mins * 60;
+  cindyRounds    = 0;
+  cindyStartTime = Date.now();
+  cindyRunning   = true;
+  cindyExCur     = {pullup:0, pushup:0, squat:0};
+  cindyExTot     = {pullup:0, pushup:0, squat:0};
+  cindyExIdx     = 0;
+
+  // Mostra pannello corretto
+  document.getElementById('cindy-setup').style.display          = 'none';
+  document.getElementById('cindy-results').style.display         = 'none';
+  document.getElementById('cindy-running-rounds').style.display  = cindyMode==='rounds' ? 'block' : 'none';
+  document.getElementById('cindy-running-exs').style.display     = cindyMode==='exercises' ? 'block' : 'none';
+
+  // Imposta display timer iniziale
+  const timeStr = _cindyFmtTime(cindySecsLeft);
+  _setEl('cindy-timer-r', timeStr);
+  _setEl('cindy-timer-e', timeStr);
+  _setEl('cindy-rounds-count', '0');
+  _setEl('cindy-round-e', '0');
+  _cindyUpdateExDisplay();
+
+  // Avvia interval
+  if(cindyInterval) clearInterval(cindyInterval);
+  cindyInterval = setInterval(_cindyTick, 1000);
+  toast('Cindy avviata — '+mins+' minuti. Forza!', 2500);
+}
+
+function _cindyFmtTime(secs){
+  const m = String(Math.floor(secs/60)).padStart(2,'0');
+  const s = String(secs%60).padStart(2,'0');
+  return m+':'+s;
+}
+
+function _setEl(id, val){
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+
+// ── TICK ─────────────────────────────────────────────────────
+function _cindyTick(){
+  if(!cindyRunning) return;
+  cindySecsLeft--;
+  const timeStr = _cindyFmtTime(Math.max(0, cindySecsLeft));
+  _setEl('cindy-timer-r', timeStr);
+  _setEl('cindy-timer-e', timeStr);
+
+  // Colore rosso negli ultimi 10 secondi
+  const urgentColor = cindySecsLeft <= 10 ? '#F87171' : '#60A5FA';
+  ['cindy-timer-r','cindy-timer-e'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.color = urgentColor;
+  });
+
+  if(cindySecsLeft <= 0){
+    _cindyEnd();
+  }
+}
+
+// ── FINE TIMER ────────────────────────────────────────────────
+function _cindyEnd(){
+  clearInterval(cindyInterval);
+  cindyInterval = null;
+  cindyRunning  = false;
+
+  // Beep 3 toni + vibrazione (stesso sistema del timer pause)
+  try {
+    const ac = new(window.AudioContext||window.webkitAudioContext)();
+    [0,0.3,0.6].forEach(t=>{
+      const o=ac.createOscillator(), g=ac.createGain();
+      o.connect(g); g.connect(ac.destination);
+      o.frequency.value=880; g.gain.setValueAtTime(0.3,ac.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+t+0.25);
+      o.start(ac.currentTime+t); o.stop(ac.currentTime+t+0.3);
+    });
+  } catch(e){}
+  if(navigator.vibrate) navigator.vibrate([400,150,400,150,600]);
+
+  // Mostra risultati
+  _showCindyResults();
+}
+
+// ── AGGIUNTA ROUND (modalità round completi) ──────────────────
+function addCindyRound(){
+  if(!cindyRunning) return;
+  cindyRounds++;
+  // aggiorna anche i totali esercizi
+  cindyExTot.pullup  += CINDY_TARGETS.pullup;
+  cindyExTot.pushup  += CINDY_TARGETS.pushup;
+  cindyExTot.squat   += CINDY_TARGETS.squat;
+  _setEl('cindy-rounds-count', String(cindyRounds));
+  // Flash verde sul contatore
+  const el = document.getElementById('cindy-rounds-count');
+  if(el){
+    el.style.color='#4ADE80';
+    setTimeout(()=>{ el.style.color='#fff'; }, 400);
+  }
+}
+
+// ── AGGIUNTA ESERCIZIO (modalità traccia) ────────────────────
+function addCindyEx(ex){
+  if(!cindyRunning) return;
+  const cur = CINDY_ORDER[cindyExIdx];
+  // Aggiunge solo l'esercizio corrente del round
+  if(ex !== cur){
+    toast('Completa prima: '+CINDY_LABELS[cur], 1500);
+    return;
+  }
+  cindyExCur[ex]++;
+  cindyExTot[ex]++;
+  _setEl('cindy-cnt-pu',   String(cindyExTot.pullup));
+  _setEl('cindy-cnt-push', String(cindyExTot.pushup));
+  _setEl('cindy-cnt-sq',   String(cindyExTot.squat));
+  _cindyUpdateExDisplay();
+
+  // Controlla se esercizio completato
+  if(cindyExCur[ex] >= CINDY_TARGETS[ex]){
+    cindyExIdx++;
+    if(cindyExIdx >= CINDY_ORDER.length){
+      // Round completato!
+      cindyRounds++;
+      cindyExIdx = 0;
+      cindyExCur = {pullup:0, pushup:0, squat:0};
+      _setEl('cindy-round-e', String(cindyRounds));
+      // Flash verde sul round counter
+      const re = document.getElementById('cindy-round-e');
+      if(re){ re.style.color='#4ADE80'; setTimeout(()=>{ re.style.color='#fff'; },400); }
+      toast('Round '+cindyRounds+' completato! 💪', 1200);
+    }
+    _cindyUpdateExDisplay();
+  }
+}
+
+function _cindyUpdateExDisplay(){
+  const cur = CINDY_ORDER[cindyExIdx];
+  const target = CINDY_TARGETS[cur];
+  const done   = cindyExCur[cur];
+  _setEl('cindy-ex-name',     CINDY_LABELS[cur]);
+  _setEl('cindy-ex-progress', done+' / '+target);
+
+  // Barre progresso
+  const barData = [
+    {id:'cindy-bar-pu',   ex:'pullup',  color:'#60A5FA'},
+    {id:'cindy-bar-push', ex:'pushup',  color:'#4ADE80'},
+    {id:'cindy-bar-sq',   ex:'squat',   color:'#FBBF24'},
+  ];
+  barData.forEach(b => {
+    const el = document.getElementById(b.id);
+    if(!el) return;
+    const pct = Math.min(100, Math.round(cindyExCur[b.ex]/CINDY_TARGETS[b.ex]*100));
+    el.style.width = pct+'%';
+  });
+
+  // Aggiorna label barre
+  const labEl = document.querySelector('#cindy-running-exs .cindy-bar-labels');
+  const lbl = `Pull ${cindyExCur.pullup}/5 · Push ${cindyExCur.pushup}/10 · Squat ${cindyExCur.squat}/15`;
+  const lblEls = document.querySelectorAll('#cindy-running-exs [style*="justify-content:space-between"] span');
+  if(lblEls.length >= 3){
+    lblEls[0].textContent = 'Pull '+cindyExCur.pullup+'/5';
+    lblEls[1].textContent = 'Push '+cindyExCur.pushup+'/10';
+    lblEls[2].textContent = 'Squat '+cindyExCur.squat+'/15';
+  }
+}
+
+// ── STOP MANUALE ──────────────────────────────────────────────
+function stopCindy(){
+  if(!cindyRunning) return;
+  clearInterval(cindyInterval);
+  cindyInterval = null;
+  cindyRunning  = false;
+  _showCindyResults();
+}
+
+// ── RISULTATI ─────────────────────────────────────────────────
+function _showCindyResults(){
+  const elapsed = Math.round((Date.now() - cindyStartTime) / 1000);
+  const elStr   = _cindyFmtTime(elapsed);
+
+  document.getElementById('cindy-running-rounds').style.display = 'none';
+  document.getElementById('cindy-running-exs').style.display    = 'none';
+  document.getElementById('cindy-results').style.display        = 'block';
+
+  _setEl('cindy-res-rounds', String(cindyRounds));
+  _setEl('cindy-res-time', elStr);
+
+  // Dettaglio
+  const totReps = cindyExTot.pullup + cindyExTot.pushup + cindyExTot.squat;
+  const detail  = document.getElementById('cindy-res-detail');
+  if(detail){
+    detail.innerHTML =
+      '<b style="color:#60A5FA;">Pull-up:</b> '+cindyExTot.pullup+'<br>'+
+      '<b style="color:#4ADE80;">Push-up:</b> '+cindyExTot.pushup+'<br>'+
+      '<b style="color:#FBBF24;">Squat:</b>   '+cindyExTot.squat+'<br>'+
+      '<b style="color:var(--text2);">Rip. totali:</b> '+totReps;
+  }
+  // Salva riferimenti per saveCindy
+  window._cindySave = {
+    rounds: cindyRounds,
+    elapsed: elapsed,
+    elStr: elStr,
+    exTot: {...cindyExTot},
+    totReps: totReps,
+  };
+}
+
+// ── SALVATAGGIO ───────────────────────────────────────────────
+function saveCindy(continueWithFree){
+  const d = window._cindySave;
+  if(!d) return;
+
+  const today   = new Date().toLocaleDateString('it-IT');
+  const kcal    = Math.round(8 * (bw||75) * (d.elapsed/3600));
+  const session = {
+    id:       Date.now(),
+    date:     today,
+    name:     'Cindy',
+    type:     'cindy',
+    duration: Math.round(d.elapsed/60),
+    kcal:     kcal,
+    rounds:   d.rounds,
+    reps:     d.exTot,
+    totReps:  d.totReps,
+    exercises:[
+      {name:'Pull-up',  muscle:'Schiena',  type:'Corpo libero', sets:[{reps:d.exTot.pullup,  weight:0}]},
+      {name:'Push-up',  muscle:'Petto',    type:'Corpo libero', sets:[{reps:d.exTot.pushup,  weight:0}]},
+      {name:'Squat',    muscle:'Gambe',    type:'Corpo libero', sets:[{reps:d.exTot.squat,   weight:0}]},
+    ],
+    vol:0, sets:d.rounds*3,
+    fc: hr||0,
+  };
+  sessions.push(session);
+  saveToStorage();
+  toast('✓ Cindy salvata — '+d.rounds+' round · '+kcal+' kcal', 3000);
+
+  // Reset UI
+  document.getElementById('cindy-results').style.display  = 'none';
+  document.getElementById('cindy-setup').style.display    = 'block';
+  document.getElementById('cindy-panel').style.display    = 'none';
+  document.getElementById('cindy-chev').style.transform   = '';
+  window._cindySave = null;
+
+  if(continueWithFree){
+    // Avvia sessione libera
+    setTimeout(()=>{ beginWorkout('Libera','all'); }, 400);
+  }
 }
 
 function toggleMultiChooser(){
@@ -1745,6 +2257,19 @@ function doExport(){
   } else if(fmt==='md'){
     let out='# GymForge — Report Allenamenti\n\n';
     src.forEach(s=>{
+      // Sessione Cindy — formato speciale
+      if(s.type==='cindy'){
+        out+='## '+s.date+' — Protocollo Cindy\n\n';
+        out+='| Parametro | Valore |\n|---|---|\n';
+        out+='| Round completati | **'+s.rounds+'** |\n';
+        out+='| Durata | '+s.duration+' min |\n';
+        out+='| Kcal stimate | '+s.kcal+' |\n';
+        out+='| Pull-up totali | '+((s.reps&&s.reps.pullup)||0)+' |\n';
+        out+='| Push-up totali | '+((s.reps&&s.reps.pushup)||0)+' |\n';
+        out+='| Squat totali | '+((s.reps&&s.reps.squat)||0)+' |\n';
+        out+='| Rip. totali | '+(s.totReps||0)+' |\n\n---\n\n';
+        return;
+      }
       out+=`## ${s.name} — ${s.date}\n\n`;
       out+=`| Campo | Valore |\n|---|---|\n`;
       out+=`| Durata | ${s.dur} min |\n`;
@@ -1786,6 +2311,7 @@ function doExport(){
     const hdr=['Data','Allenamento','Durata(min)','Kcal','Volume totale(kg)','Serie totali','FC(bpm)','Esercizio','Muscolo','Tipo','N.Serie','Peso(kg)','Ripetizioni','RIR','Vol.Serie(kg)','Cardio','Cardio Kcal','Cardio Dettaglio'];
     const rows=[];
     src.forEach(s=>{
+      if(s.type==='cindy') return; // gestita separatamente sopra
       if(!s.exercises||!s.exercises.length){
         rows.push([s.date,s.name,s.dur,s.kcal,s.vol,s.sets,s.hr||'','','','','','','','','']);
       } else {
@@ -1800,6 +2326,12 @@ function doExport(){
           }
         });
       }
+    });
+    // aggiungi righe Cindy nel CSV
+    src.filter(s=>s.type==='cindy').forEach(s=>{
+      rows.push([s.date,'Cindy',s.duration||0,s.kcal||0,'',s.rounds*3||0,s.fc||'',
+        'CINDY '+s.rounds+' round','AMRAP','Corpo libero',s.rounds*3||0,'',
+        s.totReps||'','','','','','']);
     });
     // aggiungi righe cardio per le date delle sessioni
     src.forEach(s=>{
